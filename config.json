@@ -1,0 +1,38 @@
+[
+    {
+        "network": "eth",
+        "rpc": "http:///mainnet.infura.io/v3/e1d0b7dea53643a194cadb6ed123f88e",
+        "ws": "wss://mainnet.infura.io/v3/e1d0b7dea53643a194cadb6ed123f88e",
+        "chainid": "1",
+        "apiurl": "https://api.etherscan.com/api?module=contract&action=getsourcecode&address="
+    },
+    {
+        "network": "ropsten",
+        "rpc": "https://ropsten.infura.io/v3/e1d0b7dea53643a194cadb6ed123f88e",
+        "ws": "wss://ropsten.infura.io/v3/e1d0b7dea53643a194cadb6ed123f88e",
+        "chainid": "3",
+        "apiurl": "https://api-ropsten.etherscan.io/api?module=contract&action=getsourcecode&address="
+    },
+    {
+        "network": "matic",
+        "rpc": "https://polygon-rpc.com/",
+        "ws": "",
+        "chainid": "137",
+        "apiurl": "https://api.polygonscan.com/api?module=contract&action=getsourcecode&address="
+    },
+    {
+        "network": "op",
+        "rpc": "https://mainnet.optimism.io",
+        "ws": "",
+        "chainid": "10",
+        "apiurl": "https://api-optimistic.etherscan.io/api?module=contract&=getsourcecode&address="
+    },
+    {
+        "network": "bsc",
+        "rpc": "https://bsc-dataseed1.binance.org",
+        "ws": "",
+        "chainid": "56",
+        "apiurl": "https://api.bscscan.com/api?module=contract&=getsourcecode&address="
+    }
+
+]
