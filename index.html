@@ -298,10 +298,11 @@
       typename = "payable";
     }
     viewmap.forEach(element => {
-      var fname = element.name;
+      debugger;
+      var fname = element.name
       var option = document.createElement("option");
       option.value = typename;
-      option.id = fname;
+      option.id = fname + ":" +element.id;
       option.innerHTML = fname;
       option.selected = true;
       //option.onclick = function () { changefunction(this.value,this.id) };
@@ -353,6 +354,7 @@
   }
 
   function exce() {
+    
     var paralist = document.querySelector('#paralist').getElementsByTagName("input")
     var okvalue = [];
     var tijiao = true;

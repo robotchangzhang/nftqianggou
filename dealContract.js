@@ -54,17 +54,22 @@ function fenxiabi(jsonabi) {
     var viewabi = new Map();
     var payableabi = new Map();
     var nonpayable = new Map();
+    var i=0;
     jsonabi.forEach(element => {
         if (element.type == 'function') {
             if (element.stateMutability == 'view') {
-                viewabi.set(element.name, element);
+                element.id = i;
+                viewabi.set(element.name + ":" +i, element);
             }
             else if (element.stateMutability == 'nonpayable') {
-                nonpayable.set(element.name, element);
+                element.id = i;
+                nonpayable.set(element.name + ":" +i, element);
             }
             else if (element.stateMutability == 'payable') {
-                payableabi.set(element.name, element);
+                element.id = i;
+                payableabi.set(element.name + ":" +i, element);
             }
+            i++;
         }
     });
     //这三种方法没问题了，查询没问题了
