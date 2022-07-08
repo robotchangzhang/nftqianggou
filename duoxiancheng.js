@@ -25,6 +25,7 @@ function getPriKeys(prikeyPath) {
 }
 function initWeb3(value) {
     if (web3 != null) {
+        
         web3 = null;
     }
     if (value.webtype == 'rpc') {
@@ -248,7 +249,8 @@ async function abishiyong(value) {
 
    
         for (priKey of priKeys) {
-            okvalue = value.okvalue;
+            //这里要复制数字，不然就是指针模式
+            okvalue = [].concat(value.okvalue);
             // 创建abi二进制
             // 如果要填自己的地址 ,默认通配符是 myaddress
             address = "0x" + util.privateToAddress(priKey).toString('hex');
