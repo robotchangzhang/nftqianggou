@@ -273,7 +273,10 @@ async function abishiyong(value) {
             else
             {
                 var inputdata = web3.eth.abi.encodeFunctionCall(abi, okvalue);
-                qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit);
+                //如果10个号，直接多线程
+                //qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit);
+                //如果1000个号，还是用单线程模式
+                await qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit);
             }
             //break;
         }

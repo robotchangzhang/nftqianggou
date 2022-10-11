@@ -25,14 +25,14 @@
         "rpc": "https://mainnet.optimism.io",
         "ws": "",
         "chainid": "10",
-        "apiurl": "https://api-optimistic.etherscan.io/api?module=contract&=getsourcecode&address="
+        "apiurl": "https://api-optimistic.etherscan.io/api?module=contract&action=getsourcecode&address="
     },
     {
         "network": "bsc",
         "rpc": "https://bsc-dataseed1.binance.org",
         "ws": "",
         "chainid": "56",
-        "apiurl": "https://api.bscscan.com/api?module=contract&=getsourcecode&address="
+        "apiurl": "https://api.bscscan.com/api?module=contract&action=getsourcecode&address="
     }
 
 ]
