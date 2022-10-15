@@ -28,6 +28,8 @@ node.js编写，可以自己手动编译
 ![image](https://raw.githubusercontent.com/robotchangzhang/nftqianggou/main/img/3.jpg)
 
 
+**新版界面**
+![image](https://raw.githubusercontent.com/robotchangzhang/nftqianggou/main/img/11.jpg)
 
 **注意事项**
 
@@ -37,6 +39,7 @@ node.js编写，可以自己手动编译
 
 
 **特别感谢**
+
 感谢西蒙斯对本项目界面优化做出的支持！！！
 
 
