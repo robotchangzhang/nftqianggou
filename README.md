@@ -35,5 +35,10 @@ node.js编写，可以自己手动编译
 ![image](https://raw.githubusercontent.com/robotchangzhang/nftqianggou/main/img/10.jpg)
 2、修复智能合约方法有重名的情况
 
+
+**特别感谢**
+感谢西蒙斯对本项目界面优化做出的支持！！！
+
+
 厂长支持地址：0x100422cdf07c187eb6a67ae931db62e35f8773ce
 各条链都可以
