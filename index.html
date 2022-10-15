@@ -7,101 +7,124 @@
   <meta http-equiv="Content-Security-Policy"
     content="default-src 'self'; script-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
   <link href="./styles.css" rel="stylesheet">
-  <title>Hello World!</title>
+  <link href="./bootstrap.min.css" rel="stylesheet">
+  <title>Hello Crypto!</title>
 </head>
 
 <body>
-
-  <div>
+  <div class="container py-3">
     <h1>
-      NFT抢购程序
+      科学家小工具
     </h1>
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">1. 网络设置</h4>
+            <label for="network" class="form-label">交互网络</label>
+            <div id="network" class="mb-2"></div>
+            <label for="network" class="form-label">接入点类型</label>
+            <div id="webtype" class="mb-2">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="webnetwork" value="rpc" id="rpc"
+                  onclick='changewebnetwork(this.value)'>http地址</input>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="webnetwork" value="ws" id="ws"
+                  onclick='changewebnetwork(this.value)'>wss地址</input>
+              </div>
+            </div>
+            <div class="mb-2">
+              <label for="network" class="form-label">接入点地址</label>
+              <input class="form-control" type="text" name="name" id="weburl" placeholder="可以从alchemy.com免费申请"
+                value="" />
+            </div>
+            <input type="button" onclick="initweb3()" class="btn btn-dark btn-add" value="初始化web3"> </input>
+            <button type="button" onclick="ceshi()" class="btn btn-outline-dark btn-add">查询钱包余额 </button>
+          </div>
+        </div>
+        <hr>
 
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title">2. 交易设置</h3>
+            <div class="mb-2">
+              <label for="nftaddress" class="form-label">交互合约地址</label>
+              <input class="form-control" id="nftaddress" placeholder="智能合约地址">
+            </div>
+            <div class="mb-2">
+              <label for="neth" class="form-label">主币数量（比如ETH、BNB、Matic）</label>
+              <input type="number" class="form-control" id="neth" placeholder="有些智能合约在交互的时候需要给钱，比如ETH" value="0">
+            </div>
+            <div class="mb-2">
+              <label for="inputdata" class="form-label">Hex Data（链上交互的细节信息）</label>
+              <textarea class="form-control" id="inputdata" placeholder="Input Data"></textarea>
+            </div>
+            <div class="mb-2">
+              <label for="qianggougas" class="form-label">Gas</label>
+              <input type="number" class="form-control" id="qianggougas" placeholder="Gas">
+            </div>
+            <div class="mb-2">
+              <label for="qianggougaslimit" class="form-label">Gas Limit</label>
+              <input type="number" class="form-control" id="qianggougaslimit" placeholder="Gas Limit">
+            </div>
+            <button type="button" onclick="qianggou()" class="btn btn-success btn-add">立即抢购</button>
+          </div>
+        </div>
 
-    <from id="network">
+        <hr>
 
-    </from>
-    <form id="webtype">
-      <input type="radio" name="webnetwork" value="rpc" id="rpc" onclick='changewebnetwork(this.value)'>rpc地址</input>
-      <input type="radio" name="webnetwork" value="ws" id="ws" onclick='changewebnetwork(this.value)'>ws地址</input>
-    </form>
-    <br>
-    <input class="inputa" type="text" name="name" id="weburl" placeholder="服务地址" autofocus
-      value="https://mainnet.infura.io/v3/e1d0b7dea53643a194cadb6ed123f88e" />
-    <br>
-    <input type="button" onclick="initweb3()" class="btn btn-add" value="初始化web3"> </input>
-  </div>
-  <!-- 合约地址，inputdata，主币数量，gas费，最大gasuse -->
-  <div style="width:500px;float:left ">
-    <label>主币数量</label> <input class="inputa" type="number" name="name" id="neth" placeholder="eth" autofocus
-      value="0" />
-    <br>
-    <label style="color:red; ">这里才是NFT合约的真实地址</label> 
-    <br>
-    <label>nft抢购合约地址</label> <input class="inputa" type="text" name="name" id="nftaddress" placeholder="nftaddress"
-      autofocus value="0x367d00be7703325ca904ff08b30bc353019eac44" />
-    <br>
-    <label>inputdata内容</label> <input class="inputa" type="text" name="name" id="inputdata" placeholder="nftaddress"
-      autofocus value="0x035d9f2a0000000000000000000000000000000000000000000000000000000000000001" />
-    <br>
-    <label>gas</label> <input class="inputa" type="number" name="name" id="qianggougas" placeholder="gas" autofocus
-      value="50" />
-    <br>
-    <label>gaslimit</label> <input class="inputa" type="number" name="name" id="qianggougaslimit" placeholder="gaslimit"
-      autofocus value="426605" />
-    <br>
-    <button type="button" onclick="qianggou()" class="btn btn-add">立即抢购 </button>
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title">3. 按照合约信息交互</h3>
+            <div class="mb-2">
+              <label for="network" class="form-label">智能合约地址</label>
+              <input class="form-control" type="text" name="name" id="Contractaddress" placeholder="0x000000..." />
+            </div>
+            <button type="button" onclick="queryContarct()" class="btn btn-primary btn-add">查询智能合约</button>
+            <hr>
 
-    <button type="button" onclick="ceshi()" class="btn btn-add">查询钱包余额 </button>
-  </div>
-  <div style="width:500px">
-    <label style="color:red; ">这里的智能合约地址只用于查询，不用于mint</label> 
-    <br>
-    <label>智能合约地址</label> <input class="inputa" type="text" name="name" id="Contractaddress"
-      placeholder="Contractaddress" autofocus value="0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85" />
-    <br>
-    <button type="button" onclick="queryContarct()" class="btn btn-add">查询智能合约 </button>
-    <br>
-    <input type="radio" name="functionname" value="view" id="view" onclick='readfunction(this.value)'>只读方法</input>
-    <input type="radio" name="functionname" value="nonpayable" id="nonpayable"
-      onclick='readfunction(this.value)'>不消耗主币方法</input>
-    <input type="radio" name="functionname" value="payable" id="payable"
-      onclick='readfunction(this.value)'>消耗主币方法</input>
-    <br>
-    <select id="fangfa" onchange="changefunction(this)">
-    </select>
-    <br>
-    <div id="paralist">
+            <div class="mb-2">
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="functionname"
+                  value="view" id="view" onclick='readfunction(this.value)'>只读方法</input></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="functionname"
+                  value="nonpayable" id="nonpayable" onclick='readfunction(this.value)'>不消耗主币方法</input></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="functionname"
+                  value="payable" id="payable" onclick='readfunction(this.value)'>消耗主币方法</input></div>
+            </div>
+            <div class="border p-2 bg-light rounded ">
+              <select class="form-select mb-2" id="fangfa" onchange="changefunction(this)">
+              </select>
+              <div id="paralist" class="mb-2">
+              </div>
+              <button class="btn btn-warning" onclick="exce()">执行</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col" style="max-width: 450px; height: 100vh;">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">导入账户</h4>
+            <hr>
+            <div class="text-muted font-monospace" style="max-height: 200px; overflow: auto; font-size: 12px;"
+              id="priAccounts"></div>
+          </div>
+        </div>
+        <hr>
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">日志</h4>
+            <hr>
+            <div id="log"></div>
+            <hr>
+            <button class="btn btn-light" onclick="cleanall()">清空日志</button>
+          </div>
+        </div>
+      </div> <!-- You can also require other files to run in this process -->
     </div>
-    <button onclick="exce()">执行</button>
-    <br>
-    <button onclick="cleanall()">清空日志</button>
   </div>
-  <div id="log">
-
-  </div> <!-- You can also require other files to run in this process -->
   <script src="./renderer.js"></script>
-  <style type="text/css">
-    .form-box {
-      width: 80%;
-      margin: 5px auto
-    }
-
-    .inputa {
-      width: 50%;
-      margin: 5px auto
-    }
-
-    .evmnetwork {
-      width: 100px;
-      margin-top: 2px
-    }
-
-    .btn-add {
-      width: 200px;
-      margin-top: 2px
-    }
-  </style>
 </body>
 
 <script>
@@ -170,9 +193,13 @@
     var i = 0;
     for (evmnetwork in evmnetworks) {
       //console.log(evmnetwork);
+      var radioWrapper = document.createElement('div');
+      radioWrapper.className = 'form-check form-check-inline';
       var radio = document.createElement("input");
       radio.type = "radio";
       radio.name = "evmnetwork";
+      radio.className = 'form-check-input'
+      console.log(radio);
       radio.value = evmnetworks[evmnetwork].network;
       radio.id = evmnetworks[evmnetwork].network;
       if (i == 0) {
@@ -183,10 +210,14 @@
       i++;
       //radio.innerHTML = '"' + evmnetworks[evmnetwork].network + '"';
       radio.onclick = function () { changenetwork(this.value) };
-      network.appendChild(radio);
+      // network.appendChild(radio);
+      radioWrapper.appendChild(radio);
       var label = document.createElement("label");
+      label.className = 'form-check-label';
       label.innerHTML = evmnetworks[evmnetwork].network;
-      network.appendChild(label);
+      // network.appendChild(label);
+      radioWrapper.appendChild(label);
+      network.appendChild(radioWrapper)
     }
 
   }
@@ -242,7 +273,7 @@
     }
 
   });
-  
+
   var abi = null;
   ipcRenderer.on('info:queryabi', (e, value) => {
     console.log(value)
@@ -255,8 +286,7 @@
     }
   });
 
-  function cleanall()
-  {
+  function cleanall() {
     var selecthtml = document.querySelector('#log');
     cleanchild(selecthtml)
   }
@@ -306,7 +336,7 @@
       var fname = element.name
       var option = document.createElement("option");
       option.value = typename;
-      option.id = fname + ":" +element.id;
+      option.id = fname + ":" + element.id;
       option.innerHTML = fname;
       option.selected = true;
       //option.onclick = function () { changefunction(this.value,this.id) };
@@ -340,8 +370,13 @@
     }
     else if (type == "address") {
       if (value.indexOf("0x") == -1) {
-        if(value=="myaddress")
-        {
+        if (value == "myaddress") {
+          return value;
+        }
+        if (value == "我的地址") {
+          return value;
+        }
+        if (value == "地址") {
           return value;
         }
         console.log("错误：" + id + "输入的参数不匹配");
@@ -358,7 +393,6 @@
   }
 
   function exce() {
-    
     var paralist = document.querySelector('#paralist').getElementsByTagName("input")
     var okvalue = [];
     var tijiao = true;
@@ -370,9 +404,9 @@
         tijiao = false;
     }
     if (tijiao) {
-      
-     
-      
+
+
+
       //给后台提交数组
       if (useabi != null) {
 
@@ -422,19 +456,20 @@
         }
 
         inputs.forEach(element => {
-
-          var aname = document.createElement('a');
-          aname.innerHTML = element.name + "(" + element.type + ")";
-          selecthtml.appendChild(aname)
+          var dom = document.createElement('div');
+          dom.className = 'mb-1';
+          var label = document.createElement('label');
+          label.innerHTML = element.name + "(" + element.type + ")";
+          dom.appendChild(label)
           var input = document.createElement('input');
           input.name = element.type;
           input.id = element.name;
-          if(element.type == "address")
-          {
-            input.value = "myaddress";
+          input.className = 'form-control'
+          if (element.type == "address") {
+            input.value = "我的地址";
           }
-          selecthtml.appendChild(input);
-          selecthtml.appendChild(document.createElement('BR'));
+          dom.appendChild(input);
+          selecthtml.appendChild(dom);
         });
 
 
@@ -452,6 +487,14 @@
 
   });
 
+  var accountHolder = document.getElementById('priAccounts');
+  ipcRenderer.on('info:accounts', (e, value) => {
+    for (let acct of value['result']) {
+      accountHolder.append(acct);
+      accountHolder.append(document.createElement('br'))
+    }
+  });
+
   (function () {
     var old = console.log;
     var logger = document.getElementById('log');
@@ -462,7 +505,12 @@
         logger.innerHTML += message + '<br />';
       }
     }
-  })();	
+  })();
+
+  setTimeout(() => {
+    ipcRenderer.send('info:accounts', null)
+  }, 300);
+
 </script>
 
 </html>

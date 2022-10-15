@@ -27,9 +27,11 @@ async function getContract(url, address) {
 }
 
 async function startEx(apiurl, tokenaddress) {
+    console.log('good!')
     let sourcecode = await getContract(apiurl, tokenaddress);
+    console.log(sourcecode)
     // 获取开源智能合约的ABI
-    if (sourcecode[0] && sourcecode[1].ABI!= "Contract source code not verified") {
+    if (sourcecode[0] && sourcecode[1].ABI != "Contract source code not verified") {
         var stringABI = sourcecode[1].ABI;
         //将string abi 转换成json;
         var jsonabi = JSON.parse(stringABI);
@@ -41,10 +43,9 @@ async function startEx(apiurl, tokenaddress) {
             2、写函数，不需要主币支付费用  "stateMutability": "nonpayable",
             3、写函数，需要主币支付费用  "stateMutability": "payable",  
         */
-       return fenxiabi(jsonabi);
+        return fenxiabi(jsonabi);
     }
-    else
-    {
+    else {
         return [false]
     }
     //console.log(sourcecode);
@@ -54,20 +55,20 @@ function fenxiabi(jsonabi) {
     var viewabi = new Map();
     var payableabi = new Map();
     var nonpayable = new Map();
-    var i=0;
+    var i = 0;
     jsonabi.forEach(element => {
         if (element.type == 'function') {
             if (element.stateMutability == 'view') {
                 element.id = i;
-                viewabi.set(element.name + ":" +i, element);
+                viewabi.set(element.name + ":" + i, element);
             }
             else if (element.stateMutability == 'nonpayable') {
                 element.id = i;
-                nonpayable.set(element.name + ":" +i, element);
+                nonpayable.set(element.name + ":" + i, element);
             }
             else if (element.stateMutability == 'payable') {
                 element.id = i;
-                payableabi.set(element.name + ":" +i, element);
+                payableabi.set(element.name + ":" + i, element);
             }
             i++;
         }
@@ -88,9 +89,9 @@ function fenxiabi(jsonabi) {
 }
 
 async function start(value) {
-    return await startEx(value.apiurl,value.contractaddress);
+    return await startEx(value.apiurl, value.contractaddress);
 }
 
 module.exports = {
-    start,start
+    start, start
 }

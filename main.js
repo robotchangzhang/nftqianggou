@@ -31,7 +31,7 @@ function createWindow() {
   // Open the DevTools.
   //mainWindow.webContents.openDevTools()
 
-  
+
 }
 
 // This method will be called when Electron has finished
@@ -63,7 +63,7 @@ const eventListener = async () => {
     console.log("info:initweb3");
     console.log(value)
     result = qianggou.initWeb3(value)
-    qianggou.setmainWindow( mainWindow);
+    qianggou.setmainWindow(mainWindow);
     mainWindow.webContents.send("info:initweb3", { result });
   })
 
@@ -82,7 +82,7 @@ const eventListener = async () => {
 
     mainWindow.webContents.send("info:test", { result });
   })
-  
+
   ipcMain.on('info:queryabi', async (e, value) => {
     console.log("info:queryabi");
     console.log(value)
@@ -100,7 +100,16 @@ const eventListener = async () => {
 
     //mainWindow.webContents.send("info:abishiyong", { result });
   })
-  
+
+  ipcMain.on('info:accounts', async (e, value) => {
+    console.log("info:accounts");
+    console.log(value)
+    result = qianggou.accounts;
+    console.log(result);
+
+    mainWindow.webContents.send("info:accounts", { result });
+  })
+
 }
 
 eventListener();

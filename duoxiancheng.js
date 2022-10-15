@@ -222,7 +222,25 @@ function qianggou(value) {
     var nftaddress = value.nftaddress;
     var neth = value.neth;
     for (priKey of priKeys) {
-        qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit);
+
+        okvalue = [].concat(inputdata);
+		addressNo0x = util.privateToAddress(priKey).toString('hex')
+		address = "0x" + addressNo0x;
+        try {
+			//只能替换第一个匹配的
+			//okvalue[0] = okvalue[0].replace("myaddress", addressNo0x)
+            //okvalue[0] = okvalue[0].replace("地址", addressNo0x)
+			//用正则才能全部替换
+			okvalue[0] = okvalue[0].replace(new RegExp("myaddress",'g'),addressNo0x);
+			okvalue[0] = okvalue[0].replace(new RegExp("我的地址",'g'),addressNo0x);
+            okvalue[0] = okvalue[0].replace(new RegExp("地址",'g'),addressNo0x);
+        }
+		catch (e) {
+            ;
+        }
+        
+		console.log("okvalue[0]:"+okvalue)
+        qianggouNFT(priKey, nftaddress, okvalue[0], neth, gas, gaslimit);
         //break;
     }
 
@@ -256,7 +274,15 @@ async function abishiyong(value) {
             address = "0x" + util.privateToAddress(priKey).toString('hex');
             for (var i = 0; i < okvalue.length; i++) {
                 try {
-                    okvalue[i] = okvalue[i].replace("myaddress", address)
+                    
+                        //只能替换第一个匹配的
+                        //okvalue[0] = okvalue[0].replace("myaddress", addressNo0x)
+                        //okvalue[0] = okvalue[0].replace("地址", addressNo0x)
+                        //用正则才能全部替换
+                        okvalue[i] = okvalue[i].replace(new RegExp("myaddress",'g'),addressNo0x);
+                        okvalue[i] = okvalue[i].replace(new RegExp("我的地址",'g'),addressNo0x);
+                        okvalue[i] = okvalue[i].replace(new RegExp("地址",'g'),addressNo0x);
+                    
                 }
                 catch (e) {
                     ;
@@ -287,6 +313,7 @@ module.exports = {
     test: test,
     qianggou: qianggou,
     setmainWindow: setmainWindow,
-    abishiyong: abishiyong
+    abishiyong: abishiyong,
+    accounts: priKeys.map(_key => { console.log("0x" + util.privateToAddress(_key).toString('hex')); return "0x" + util.privateToAddress(_key).toString('hex'); })
 }
 
