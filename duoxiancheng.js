@@ -1,6 +1,17 @@
 //这里用bsc 链举例子
 //加载web3的库
 var Web3 = require('web3');
+
+//用私钥将交易内容签名
+var EthereumTx = require('ethereumjs-tx');
+const util = require('ethereumjs-util')
+//这里是加载私钥的部分
+
+const { Common }  = require( '@ethereumjs/common' );
+
+const EthereumTx1559 = require( '@ethereumjs/tx' );
+
+
 var fs = require('fs');
 var mainWindow = null; //用来给前台发信息
 var web3 = null;
@@ -41,13 +52,12 @@ function initWeb3(value) {
     }
     chainid = Number(value.chainid.toString())
     nownetwork = value.nownetwork;
+
+
     return true;
 }
 
-//用私钥将交易内容签名
-var EthereumTx = require('ethereumjs-tx');
-const util = require('ethereumjs-util')
-//这里是加载私钥的部分
+
 
 
 
@@ -102,6 +112,7 @@ function getEthRawTx(fromAddress, toAddress, input, nonceNum, privKey, gasPrice,
         "value": web3.utils.toHex(nbnb),
         "data": input,  //设置num属性
         "chainId": chainid //4:Rinkeby, 3:Ropsten, 1:mainnet
+       
 
     };
 
@@ -112,9 +123,49 @@ function getEthRawTx(fromAddress, toAddress, input, nonceNum, privKey, gasPrice,
 }
 
 
+
+
+function getEthRawTx1559(fromAddress, toAddress, input, nonceNum, privKey, maxPriorityFeePerGas,maxFeePerGas, nbnb, gaslimit) {
+
+    //maxPriorityFeePerGas = web3.utils.toWei((2).toString(10), 'Gwei');
+    //maxFeePerGas = web3.utils.toWei((50).toString(10), 'Gwei');
+    var rawTransaction = {
+        "from": fromAddress,
+        "nonce": web3.utils.toHex(nonceNum),
+        "gasLimit": web3.utils.toHex(gaslimit),
+        //"gasPrice": web3.utils.toHex(gasPrice),
+        "maxPriorityFeePerGas": web3.utils.toHex(maxPriorityFeePerGas),
+        "maxFeePerGas": web3.utils.toHex(maxFeePerGas),
+        "to": toAddress,
+        "value": web3.utils.toHex(nbnb),
+        "data": input,  //设置num属性
+        "chainId": chainid, //4:Rinkeby, 3:Ropsten, 1:mainnet
+        "type": '0x2', //EIP-1559
+
+    };
+    const common = Common.custom({ chainId: chainid })
+    var tx = EthereumTx1559.FeeMarketEIP1559Transaction.fromTxData(rawTransaction, {common});
+    var signedtx = tx.sign(privKey);
+   
+    var serializedTx = signedtx.serialize();
+    return serializedTx;
+}
+
+
+
 //这里是将签名的内容发送到区块链网络中的代码
-const signTransaction = async (fromAddress, toAddress, input, nonceNum, privKey, gasPrice, nbnb, gaslimit) => {
-    var serializedTx = getEthRawTx(fromAddress, toAddress, input, nonceNum, privKey, gasPrice, nbnb, gaslimit)
+const signTransaction = async (fromAddress, toAddress, input, nonceNum, privKey, gasPrice, nbnb, gaslimit,gastype,gasmaxPriorityFeePerGas,gasmaxFeePerGas) => {
+
+    var serializedTx ;
+    if(gastype == "defalut")
+    {
+        serializedTx = getEthRawTx(fromAddress, toAddress, input, nonceNum, privKey, gasPrice, nbnb, gaslimit)
+    }
+    else
+    {
+        serializedTx = getEthRawTx1559(fromAddress, toAddress, input, nonceNum, privKey, gasmaxPriorityFeePerGas,gasmaxFeePerGas, nbnb, gaslimit)
+    }
+    
 
     // Comment out these three lines if you don't really want to send the TX right now
     console.log(`Attempting to send signed tx:  ${serializedTx.toString('hex')}`);
@@ -136,7 +187,7 @@ const getBNBBalance = async (address) => {
     return balance;
 }
 //私钥，合约地址，inputdata，主币数量，gas费，最大gasuse
-const qianggouNFT = async (priKey, walletaddress, inputdata, value, gas, ngasLimit) => {
+const qianggouNFT = async (priKey, walletaddress, inputdata, value, gas, ngasLimit,gastype,maxPriorityFeePerGas,maxFeePerGas) => {
     //获得自己的地址
     var fromAddress = "0x" + util.privateToAddress(priKey).toString('hex');
 
@@ -148,14 +199,16 @@ const qianggouNFT = async (priKey, walletaddress, inputdata, value, gas, ngasLim
     var nbnb = web3.utils.toWei((nsendETH).toString(10), 'ether');
     //设置gasprice 为 5G wei
     var gasPrice = web3.utils.toWei((gas).toString(10), 'Gwei');
+    var gasmaxPriorityFeePerGas = web3.utils.toWei((maxPriorityFeePerGas).toString(10), 'Gwei');
+    var gasmaxFeePerGas = web3.utils.toWei((maxFeePerGas).toString(10), 'Gwei');
     //设置 gaslimit 为 420000
-    var gaslimit = ngasLimit
+    var gaslimit = ngasLimit;
     //没有调用智能合约，将input设置为空
-    var input = inputdata
+    var input = inputdata;
     //获得下一次交易的数
     console.log("发送地址是：" + fromAddress)
     var nonceCnt = await web3.eth.getTransactionCount(fromAddress);
-    let reslut = await signTransaction(fromAddress, toAddress, input, nonceCnt, priKey, gasPrice, nbnb, gaslimit)
+    let reslut = await signTransaction(fromAddress, toAddress, input, nonceCnt, priKey, gasPrice, nbnb, gaslimit,gastype,gasmaxPriorityFeePerGas,gasmaxFeePerGas)
     if (reslut) {
         //console.log("交易成功")
         sendmsg(fromAddress + "交易成功");
@@ -221,11 +274,16 @@ function qianggou(value) {
     var inputdata = value.inputdata;
     var nftaddress = value.nftaddress;
     var neth = value.neth;
+    var maxPriorityFeePerGas =  value.maxPriorityFeePerGas;
+    var maxFeePerGas =  value.maxFeePerGas;
+    var gastype = value.nowgastype;
+
+
     for (priKey of priKeys) {
 
         okvalue = [].concat(inputdata);
 		addressNo0x = util.privateToAddress(priKey).toString('hex')
-		address = "0x" + addressNo0x;
+		
         try {
 			//只能替换第一个匹配的
 			//okvalue[0] = okvalue[0].replace("myaddress", addressNo0x)
@@ -240,7 +298,7 @@ function qianggou(value) {
         }
         
 		console.log("okvalue[0]:"+okvalue)
-        qianggouNFT(priKey, nftaddress, okvalue[0], neth, gas, gaslimit);
+        qianggouNFT(priKey, nftaddress, okvalue[0], neth, gas, gaslimit,gastype,maxPriorityFeePerGas,maxFeePerGas);
         //break;
     }
 
@@ -264,11 +322,12 @@ async function abishiyong(value) {
     var gaslimit = value.gaslimit;
     var nftaddress = value.nftaddress;
     var neth = value.neth;
-
-   
+    var maxPriorityFeePerGas =  value.maxPriorityFeePerGas;
+    var maxFeePerGas =  value.maxFeePerGas;
+    var gastype = value.nowgastype;
         for (priKey of priKeys) {
             //这里要复制数字，不然就是指针模式
-            okvalue = [].concat(value.okvalue);
+            var okvalue = value.okvalue;
             // 创建abi二进制
             // 如果要填自己的地址 ,默认通配符是 myaddress
             address = "0x" + util.privateToAddress(priKey).toString('hex');
@@ -279,9 +338,9 @@ async function abishiyong(value) {
                         //okvalue[0] = okvalue[0].replace("myaddress", addressNo0x)
                         //okvalue[0] = okvalue[0].replace("地址", addressNo0x)
                         //用正则才能全部替换
-                        okvalue[i] = okvalue[i].replace(new RegExp("myaddress",'g'),addressNo0x);
-                        okvalue[i] = okvalue[i].replace(new RegExp("我的地址",'g'),addressNo0x);
-                        okvalue[i] = okvalue[i].replace(new RegExp("地址",'g'),addressNo0x);
+                        okvalue[i] = okvalue[i].replace(new RegExp("myaddress",'g'),address);
+                        okvalue[i] = okvalue[i].replace(new RegExp("我的地址",'g'),address);
+                        okvalue[i] = okvalue[i].replace(new RegExp("地址",'g'),address);
                     
                 }
                 catch (e) {
@@ -302,7 +361,7 @@ async function abishiyong(value) {
                 //如果10个号，直接多线程
                 //qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit);
                 //如果1000个号，还是用单线程模式
-                await qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit);
+                await qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit,gastype,maxPriorityFeePerGas,maxFeePerGas);
             }
             //break;
         }

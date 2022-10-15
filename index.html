@@ -48,6 +48,17 @@
         <div class="card">
           <div class="card-body">
             <h3 class="card-title">2. 交易设置</h3>
+            <label for="gastype" class="form-label">gas模式</label>
+            <div id="gastype" class="mb-2">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="webgastype" value="default" id="default"
+                  onclick='changewebgastype(this.value)'>正常模式</input>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="webgastype" value="eip1559" id="eip1559"
+                  onclick='changewebgastype(this.value)'>EIP1559</input>
+              </div>
+            </div>
             <div class="mb-2">
               <label for="nftaddress" class="form-label">交互合约地址</label>
               <input class="form-control" id="nftaddress" placeholder="智能合约地址">
@@ -56,27 +67,60 @@
               <label for="neth" class="form-label">主币数量（比如ETH、BNB、Matic）</label>
               <input type="number" class="form-control" id="neth" placeholder="有些智能合约在交互的时候需要给钱，比如ETH" value="0">
             </div>
-            <div class="mb-2">
-              <label for="inputdata" class="form-label">Hex Data（链上交互的细节信息）</label>
-              <textarea class="form-control" id="inputdata" placeholder="Input Data"></textarea>
-            </div>
-            <div class="mb-2">
+
+            <div class="mb-2" id="divdefalutgas">
               <label for="qianggougas" class="form-label">Gas</label>
-              <input type="number" class="form-control" id="qianggougas" placeholder="Gas">
+              <input type="number" class="form-control" id="qianggougas" placeholder="Gas" value="0">
+            </div>
+            <div class="mb-2" id="divmaxPriorityFeePerGas">
+              <label for="qianggoumaxPriorityFeePerGas" class="form-label">Gas小费</label>
+              <input type="number" class="form-control" id="qianggoumaxPriorityFeePerGas" placeholder="Gas 小费"
+                value="0">
+            </div>
+            <div class="mb-2" id="divmaxFeePerGas">
+              <label for="qianggoumaxFeePerGas" class="form-label">Gas最大使用</label>
+              <input type="number" class="form-control" id="qianggoumaxFeePerGas" placeholder="Gas 最大使用多少" value="0">
             </div>
             <div class="mb-2">
               <label for="qianggougaslimit" class="form-label">Gas Limit</label>
               <input type="number" class="form-control" id="qianggougaslimit" placeholder="Gas Limit">
             </div>
-            <button type="button" onclick="qianggou()" class="btn btn-success btn-add">立即抢购</button>
           </div>
         </div>
+        <hr>
+        <div class="card">
+          <div class="card">
+            <h3 class="card-title">交互模式</h3>
+            <div id="jiaohutype" class="mb-2">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="webjiaohutype" value="followmodel" id="followmodel"
+                  onclick='changejiaohutype(this.value)'>跟单模式</input>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="webjiaohutype" value="contractmodel" id="contractmodel"
+                  onclick='changejiaohutype(this.value)'>智能合约模式</input>
+              </div>
+            </div>
 
+          </div>
+        </div>
+        <div class="card" id="followmodelcard">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title">3. 跟单模式</h3>
+              <div class="mb-2">
+                <label for="inputdata" class="form-label">Hex Data（链上交互的细节信息）</label>
+                <textarea class="form-control" id="inputdata" placeholder="Input Data"></textarea>
+              </div>
+              <button type="button" onclick="qianggou()" class="btn btn-success btn-add">立即抢购</button>
+            </div>
+          </div>
+        </div>
         <hr>
 
-        <div class="card">
+        <div class="card" id="contractmodelcard">
           <div class="card-body">
-            <h3 class="card-title">3. 按照合约信息交互</h3>
+            <h3 class="card-title">4. 按照合约信息交互</h3>
             <div class="mb-2">
               <label for="network" class="form-label">智能合约地址</label>
               <input class="form-control" type="text" name="name" id="Contractaddress" placeholder="0x000000..." />
@@ -102,27 +146,29 @@
           </div>
         </div>
       </div>
-      <div class="col" style="max-width: 450px; height: 100vh;">
-        <div class="card">
-          <div class="card-body">
-            <h4 class="card-title">导入账户</h4>
-            <hr>
-            <div class="text-muted font-monospace" style="max-height: 200px; overflow: auto; font-size: 12px;"
-              id="priAccounts"></div>
-          </div>
+    
+  
+    <div class="col" style="max-width: 450px; height: 100vh;">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">导入账户</h4>
+          <hr>
+          <div class="text-muted font-monospace" style="max-height: 200px; overflow: auto; font-size: 12px;"
+            id="priAccounts"></div>
         </div>
-        <hr>
-        <div class="card">
-          <div class="card-body">
-            <h4 class="card-title">日志</h4>
-            <hr>
-            <div id="log"></div>
-            <hr>
-            <button class="btn btn-light" onclick="cleanall()">清空日志</button>
-          </div>
+      </div>
+      <hr>
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">日志</h4>
+          <hr>
+          <div id="log"></div>
+          <hr>
+          <button class="btn btn-light" onclick="cleanall()">清空日志</button>
         </div>
-      </div> <!-- You can also require other files to run in this process -->
-    </div>
+      </div>
+    </div> <!-- You can also require other files to run in this process -->
+  </div>
   </div>
   <script src="./renderer.js"></script>
 </body>
@@ -133,14 +179,22 @@
 
   const electron = require('electron');
   const { ipcRenderer } = electron;
-
+  var nownetwork = 'eth';
+  var chainid = 1;
+  var nowgastype = "eip1599";
   function init() {
     document.querySelector("#rpc").checked = true;
+    //debugger
+    document.querySelector("#eip1559").checked = true;
+    changewebgastype(nowgastype);
+
+    document.querySelector("#contractmodel").checked = true;
+    changejiaohutype("contractmodel");
+
   }
   init();
 
-  var nownetwork = 'eth';
-  var chainid = 1;
+
   //初始化web3
   function initweb3() {
     var webtype = "rpc";
@@ -173,9 +227,14 @@
     const nftaddress = document.querySelector('#nftaddress').value;
     const inputdata = document.querySelector('#inputdata').value;
     const gas = document.querySelector('#qianggougas').value;
+
     const gaslimit = document.querySelector('#qianggougaslimit').value;
     const neth = document.querySelector('#neth').value;
-    value = { nftaddress, inputdata, gas, gaslimit, neth };
+
+    const maxPriorityFeePerGas = document.querySelector('#qianggoumaxPriorityFeePerGas').value;
+    const maxFeePerGas = document.querySelector('#qianggoumaxFeePerGas').value;
+
+    value = { nftaddress, inputdata, gas, gaslimit, neth, maxPriorityFeePerGas, maxFeePerGas, nowgastype };
     console.log("开始抢购，请稍等，或者去区块链网络查看：");
     ipcRenderer.send('info:qianggou', value)
   }
@@ -188,7 +247,7 @@
 
   function init1() {
 
-
+    //debugger;
     var network = document.querySelector('#network');
     var i = 0;
     for (evmnetwork in evmnetworks) {
@@ -220,6 +279,46 @@
       network.appendChild(radioWrapper)
     }
 
+  }
+
+
+
+  function changejiaohutype(jiaohutype) {
+    //debugger
+    if (jiaohutype == "contractmodel") {
+      document.querySelector('#followmodelcard').style.display = 'none';
+      document.querySelector('#contractmodelcard').style.display = 'block';
+    }
+    else {
+      document.querySelector('#followmodelcard').style.display = 'block';
+      document.querySelector('#contractmodelcard').style.display = 'none';
+    }
+
+  }
+
+  function changewebgastype(gastype) {
+    //alert(webtype);
+    //debugger
+    if (gastype == "default") {
+      //正常模式
+      nowgastype = "default";
+      /*
+      document.querySelector('#divdefalutgas').style.visibility = 'visible';
+      document.querySelector('#divmaxPriorityFeePerGas').style.visibility = 'hidden';
+      document.querySelector('#divmaxFeePerGas').style.visibility = 'hidden';*/
+      document.querySelector('#divdefalutgas').style.display = 'block';
+      document.querySelector('#divmaxPriorityFeePerGas').style.display = 'none';
+      document.querySelector('#divmaxFeePerGas').style.display = 'none';
+
+    }
+    else {
+      //EIP1559
+      nowgastype = "eip1559";
+      document.querySelector('#divdefalutgas').style.display = 'none';
+      document.querySelector('#divmaxPriorityFeePerGas').style.display = 'block';
+      document.querySelector('#divmaxFeePerGas').style.display = 'block';
+
+    }
   }
 
   function changewebnetwork(webtype) {
@@ -415,9 +514,10 @@
         const gas = document.querySelector('#qianggougas').value;
         const gaslimit = document.querySelector('#qianggougaslimit').value;
         const neth = document.querySelector('#neth').value;
-
-        debugger;
-        value = { useabi, okvalue, nftaddress, gas, gaslimit, neth };
+        const maxPriorityFeePerGas = document.querySelector('#qianggoumaxPriorityFeePerGas').value;
+        const maxFeePerGas = document.querySelector('#qianggoumaxFeePerGas').value;
+        //debugger;
+        value = { useabi, okvalue, nftaddress, gas, gaslimit, neth, maxPriorityFeePerGas, maxFeePerGas, nowgastype };
         ipcRenderer.send('info:abishiyong', value)
       }
     }
@@ -466,7 +566,7 @@
           input.id = element.name;
           input.className = 'form-control'
           if (element.type == "address") {
-            input.value = "我的地址";
+            input.value = "myaddress";
           }
           dom.appendChild(input);
           selecthtml.appendChild(dom);
