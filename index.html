@@ -141,6 +141,17 @@
               </select>
               <div id="paralist" class="mb-2">
               </div>
+
+              <div  class="mb-2">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="webjiaohuaddress" value="address2" id="webjiaohuaddress2"
+                    >使用2的地址交互</input>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="webjiaohuaddress" value="address4" id="webjiaohuaddress4"
+                    >使用4的地址交互</input>
+                </div>
+              </div>
               <button class="btn btn-warning" onclick="exce()">执行</button>
             </div>
           </div>
@@ -190,6 +201,8 @@
 
     document.querySelector("#contractmodel").checked = true;
     changejiaohutype("contractmodel");
+    document.querySelector("#webjiaohuaddress2").checked = true;
+    
 
   }
   init();
@@ -508,9 +521,14 @@
 
       //给后台提交数组
       if (useabi != null) {
+        
 
-        const nftaddress = document.querySelector('#nftaddress').value;
-
+        var nftaddress = document.querySelector('#nftaddress').value;
+        const address2 = document.querySelector("#webjiaohuaddress2").checked ;
+        if(address2== false)
+        {
+          nftaddress = document.querySelector('#Contractaddress').value;
+        }
         const gas = document.querySelector('#qianggougas').value;
         const gaslimit = document.querySelector('#qianggougaslimit').value;
         const neth = document.querySelector('#neth').value;
