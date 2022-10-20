@@ -24,8 +24,8 @@ function createWindow() {
   })
 
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
-
+  mainWindow.loadFile('./web/index.html')
+  qianggou.setmainWindow(mainWindow);
   //const mainMenu = Menu.buildFromTemplate(menuTemplate);
   //Menu.setApplicationMenu(mainMenu);
   // Open the DevTools.
@@ -63,7 +63,7 @@ const eventListener = async () => {
     console.log("info:initweb3");
     console.log(value)
     result = qianggou.initWeb3(value)
-    qianggou.setmainWindow(mainWindow);
+    
     mainWindow.webContents.send("info:initweb3", { result });
   })
 
@@ -104,11 +104,21 @@ const eventListener = async () => {
   ipcMain.on('info:accounts', async (e, value) => {
     console.log("info:accounts");
     console.log(value)
-    result = qianggou.accounts;
+    result = qianggou.accounts();
     console.log(result);
 
     mainWindow.webContents.send("info:accounts", { result });
   })
+
+  ipcMain.on('info:creatpriatenumber', async (e, value) => {
+    console.log("info:creatpriatenumber");
+    console.log(value)
+    result = qianggou.creatpriatenumber(value);
+   
+
+    mainWindow.webContents.send("info:creatpriatenumber", { result });
+  })
+
 
 }
 

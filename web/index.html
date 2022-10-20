@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
+  <link href="./css/styles.css" rel="stylesheet">
+  <link href="./css/bootstrap.min.css" rel="stylesheet">
+  <title>Hello Crypto!</title>
+</head>
+
+<body>
+  <div class="container py-3">
+    <h1>
+      科学家小工具
+    </h1>
+    <button class="btn btn-warning" onclick="changepage('jiaohu')">交互页面</button>
+    <button class="btn btn-warning" onclick="changepage('manageprikey')">私钥管理页面</button>
+    <div class="row">
+      <div class="col" id="tabjiaohu">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">1. 网络设置</h4>
+            <label for="network" class="form-label">交互网络</label>
+            <div id="network" class="mb-2"></div>
+            <label for="network" class="form-label">接入点类型</label>
+            <div id="webtype" class="mb-2">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="webnetwork" value="rpc" id="rpc"
+                  onclick='changewebnetwork(this.value)'>http地址</input>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="webnetwork" value="ws" id="ws"
+                  onclick='changewebnetwork(this.value)'>wss地址</input>
+              </div>
+            </div>
+            <div class="mb-2">
+              <label for="network" class="form-label">接入点地址</label>
+              <input class="form-control" type="text" name="name" id="weburl" placeholder="可以从alchemy.com免费申请"
+                value="" />
+            </div>
+            <input type="button" onclick="initweb3()" class="btn btn-dark btn-add" value="初始化web3"> </input>
+            <button type="button" onclick="ceshi()" class="btn btn-outline-dark btn-add">查询钱包余额 </button>
+          </div>
+        </div>
+        <hr>
+
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title">2. 交易设置</h3>
+            <label for="gastype" class="form-label">gas模式</label>
+            <div id="gastype" class="mb-2">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="webgastype" value="default" id="default"
+                  onclick='changewebgastype(this.value)'>正常模式</input>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="webgastype" value="eip1559" id="eip1559"
+                  onclick='changewebgastype(this.value)'>EIP1559</input>
+              </div>
+            </div>
+            <div class="mb-2">
+              <label for="nftaddress" class="form-label">交互合约地址</label>
+              <input class="form-control" id="nftaddress" placeholder="智能合约地址">
+            </div>
+            <div class="mb-2">
+              <label for="neth" class="form-label">主币数量（比如ETH、BNB、Matic）</label>
+              <input type="number" class="form-control" id="neth" placeholder="有些智能合约在交互的时候需要给钱，比如ETH" value="0">
+            </div>
+
+            <div class="mb-2" id="divdefalutgas">
+              <label for="qianggougas" class="form-label">Gas</label>
+              <input type="number" class="form-control" id="qianggougas" placeholder="Gas" value="0">
+            </div>
+            <div class="mb-2" id="divmaxPriorityFeePerGas">
+              <label for="qianggoumaxPriorityFeePerGas" class="form-label">Gas小费</label>
+              <input type="number" class="form-control" id="qianggoumaxPriorityFeePerGas" placeholder="Gas 小费"
+                value="0">
+            </div>
+            <div class="mb-2" id="divmaxFeePerGas">
+              <label for="qianggoumaxFeePerGas" class="form-label">Gas最大使用</label>
+              <input type="number" class="form-control" id="qianggoumaxFeePerGas" placeholder="Gas 最大使用多少" value="0">
+            </div>
+            <div class="mb-2">
+              <label for="qianggougaslimit" class="form-label">Gas Limit</label>
+              <input type="number" class="form-control" id="qianggougaslimit" placeholder="Gas Limit">
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="card">
+          <div class="card">
+            <h3 class="card-title">交互模式</h3>
+            <div id="jiaohutype" class="mb-2">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="webjiaohutype" value="followmodel" id="followmodel"
+                  onclick='changejiaohutype(this.value)'>跟单模式</input>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="webjiaohutype" value="contractmodel"
+                  id="contractmodel" onclick='changejiaohutype(this.value)'>智能合约模式</input>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="card" id="followmodelcard">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title">3. 跟单模式</h3>
+              <div class="mb-2">
+                <label for="inputdata" class="form-label">Hex Data（链上交互的细节信息）</label>
+                <textarea class="form-control" id="inputdata" placeholder="Input Data"></textarea>
+              </div>
+              <button type="button" onclick="qianggou()" class="btn btn-success btn-add">立即抢购</button>
+            </div>
+          </div>
+        </div>
+        <hr>
+
+        <div class="card" id="contractmodelcard">
+          <div class="card-body">
+            <h3 class="card-title">4. 按照合约信息交互</h3>
+            <div class="mb-2">
+              <label for="network" class="form-label">智能合约地址</label>
+              <input class="form-control" type="text" name="name" id="Contractaddress" placeholder="0x000000..." />
+            </div>
+            <button type="button" onclick="queryContarct()" class="btn btn-primary btn-add">查询智能合约</button>
+            <hr>
+
+            <div class="mb-2">
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="functionname"
+                  value="view" id="view" onclick='readfunction(this.value)'>只读方法</input></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="functionname"
+                  value="nonpayable" id="nonpayable" onclick='readfunction(this.value)'>不消耗主币方法</input></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="functionname"
+                  value="payable" id="payable" onclick='readfunction(this.value)'>消耗主币方法</input></div>
+            </div>
+            <div class="border p-2 bg-light rounded ">
+              <select class="form-select mb-2" id="fangfa" onchange="changefunction(this)">
+              </select>
+              <div id="paralist" class="mb-2">
+              </div>
+
+              <div class="mb-2">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="webjiaohuaddress" value="address2"
+                    id="webjiaohuaddress2">使用2的地址交互</input>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="webjiaohuaddress" value="address4"
+                    id="webjiaohuaddress4">使用4的地址交互</input>
+                </div>
+              </div>
+              <button class="btn btn-warning" onclick="exce()">执行</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col" id="tabmanageprikey" style="display: none;">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">私钥管理</h4>
+            <hr>
+            <div>
+              <div class="mb-2">
+                <label for="network" class="form-label">生成多少私钥</label>
+                <input class="form-control" type="number" name="name" id="creatpriatenumber" placeholder="10" />
+                <button class="btn btn-warning" onclick="btcreatpriatenumber()">执行</button>
+                <button class="btn btn-warning" onclick="reloadaddress()">重新加载地址</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col" style="max-width: 450px; height: 100vh;">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">导入账户</h4>
+            <hr>
+            <div class="text-muted font-monospace" style="max-height: 200px; overflow: auto; font-size: 12px;"
+              id="priAccounts"></div>
+          </div>
+        </div>
+        <hr>
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">日志</h4>
+            <hr>
+            <div id="log"></div>
+            <hr>
+            <button class="btn btn-light" onclick="cleanall()">清空日志</button>
+          </div>
+        </div>
+      </div> <!-- You can also require other files to run in this process -->
+    </div>
+  </div>
+  <script src="../renderer.js"></script>
+  <script src="./js/webmain.js"></script>
+  <script src="./js/privatemanage.js"></script>
+</body>
+
+<script>
+  // You can also require other files to run in this process
+  //require('./renderer.js')
+
+</script>
+
+</html>

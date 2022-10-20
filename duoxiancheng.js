@@ -17,23 +17,37 @@ var mainWindow = null; //用来给前台发信息
 var web3 = null;
 var chainid = 1;
 var nownetwork = 'eth';
-var priKeys = getPriKeys("./prikey.prikey")
+var prikeyfile = "./prikey.prikey";
+var priKeys = getPriKeys(prikeyfile)
 process.env.UV_THREADPOOL_SIZE =20
 function getPriKeys(prikeyPath) {
 
     var filecon = fs.readFileSync(prikeyPath).toString();
-    filecon = filecon.replace("\r"), "";
+    filecon = filecon.replace("\r", "");
+    
     var privKeyFile = filecon.split("\n");
 
     var arr = new Array();
     for (line in privKeyFile) {
         privKeyFile[line] = privKeyFile[line].replace("0x", "");
         //console.log(privKeyFile[line]);
-        arr.push(new Buffer.from(privKeyFile[line].trim(), "hex"))
+        if(privKeyFile[line]!="")
+        {
+            arr.push(new Buffer.from(privKeyFile[line].trim(), "hex"))
+        }
+        
     }
     //console.log(arr);
     return arr;
 }
+
+function addprikey(str,filename) {
+    fs.appendFile(filename, str, (err, data) => {
+        if (err) throw err;
+    });
+}
+
+
 function initWeb3(value) {
     if (web3 != null) {
         
@@ -44,7 +58,7 @@ function initWeb3(value) {
         web3 = rpcweb3;
     }
     else if (value.webtype == 'ws') {
-        var wscweb3 = new Web3(new Web3.providers.WebsocketProvider(weburl));
+        var wscweb3 = new Web3(new Web3.providers.WebsocketProvider(value.weburl));
         web3 = wscweb3;
     }
     else {
@@ -367,12 +381,44 @@ async function abishiyong(value) {
         }
 }
 
+
+function creatpriatenumber(value) {
+   var createnumber = Number(value.createnumber);
+   try{
+    for(var i=0;i<createnumber;i++)
+    {
+        //创建私钥
+       var result =  web3.eth.accounts.create();
+       privateKey = result.privateKey ;
+       //将私钥写入配置配件
+       addprikey(privateKey+"\n",prikeyfile);
+       //console.log(result);
+    }
+    sendmsg( "添加" + createnumber + "个私钥成功");
+   }
+    catch(e)
+    {
+        sendmsg( "添加" + createnumber + "个私钥失败\n 请确认web3是否初始化");
+    }
+    return {};
+
+}
+
+function accounts()
+{
+    priKeys =  getPriKeys(prikeyfile);
+    return priKeys.map(_key => { console.log("0x" + util.privateToAddress(_key).toString('hex')); return "0x" + util.privateToAddress(_key).toString('hex'); })
+}
+
+
+
 module.exports = {
     initWeb3: initWeb3,
     test: test,
     qianggou: qianggou,
     setmainWindow: setmainWindow,
     abishiyong: abishiyong,
-    accounts: priKeys.map(_key => { console.log("0x" + util.privateToAddress(_key).toString('hex')); return "0x" + util.privateToAddress(_key).toString('hex'); })
+    creatpriatenumber:creatpriatenumber,
+    accounts: accounts
 }
 
