@@ -412,7 +412,7 @@
   }
 
   ipcRenderer.on('info:msg', (e, value) => {
-    console.log(value)
+    console.log(value.msg)
 
 
   });

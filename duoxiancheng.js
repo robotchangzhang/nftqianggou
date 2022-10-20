@@ -398,7 +398,7 @@ function creatpriatenumber(value) {
    }
     catch(e)
     {
-        sendmsg( "添加" + createnumber + "个私钥失败\n 请确认web3是否初始化");
+        sendmsg( "添加" + createnumber + "个私钥失败<br> 请确认web3是否初始化");
     }
     return {};
 
