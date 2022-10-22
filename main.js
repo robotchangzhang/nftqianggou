@@ -119,6 +119,38 @@ const eventListener = async () => {
     mainWindow.webContents.send("info:creatpriatenumber", { result });
   })
 
+  ipcMain.on('info:importprikey', async (e, value) => {
+    console.log("info:importprikey");
+    
+    const { dialog } = require('electron')
+    filename = await dialog.showOpenDialog({ properties: ['openFile'] });
+    if(filename.canceled == false)
+    {
+      qianggou.importprikey(filename.filePaths);
+    }
+    
+    //result = 
+   
+
+    //mainWindow.webContents.send("info:importprikey", {  });
+  })
+
+  ipcMain.on('info:exportprikey', async (e, value) => {
+    console.log("info:exportprikey");
+    
+    const { dialog } = require('electron')
+    filename = await dialog.showOpenDialog({ properties: ['openDirectory'] });
+    if(filename.canceled == false)
+    {
+      qianggou.exportprikey(filename.filePaths);
+    }
+    
+    //result = 
+   
+
+    //mainWindow.webContents.send("info:importprikey", {  });
+  })
+
 
 }
 
