@@ -20,14 +20,26 @@ var nownetwork = 'eth';
 var prikeyfile = "./prikey.prikey";
 var priKeys = getPriKeys(prikeyfile)
 process.env.UV_THREADPOOL_SIZE =20
-function getPriKeys(prikeyPath) {
 
-    var filecon = fs.readFileSync(prikeyPath).toString();
+function isFileExist(path) {
+    try{
+        fs.accessSync(path,fs.F_OK);
+    }catch(e){
+        return false;
+    }
+    return true;
+}
+
+function getPriKeys(prikeyPath) {
+    var arr = new Array();
+    var exists =isFileExist(prikeyPath);
+        if(exists){
+            var filecon = fs.readFileSync(prikeyPath).toString();
     filecon = filecon.replace("\r", "");
     
     var privKeyFile = filecon.split("\n");
 
-    var arr = new Array();
+    
     for (line in privKeyFile) {
         privKeyFile[line] = privKeyFile[line].replace("0x", "");
         //console.log(privKeyFile[line]);
@@ -39,6 +51,9 @@ function getPriKeys(prikeyPath) {
     }
     //console.log(arr);
     return arr;
+}
+    
+    
 }
 
 function addprikey(str,filename) {
