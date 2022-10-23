@@ -1,6 +1,31 @@
 # NFT批量mint程序，带源代码
 
 node.js编写，可以自己手动编译
+---------------------------------------2022-10-23-----------------------
+
+**新版本使用方法**
+
+主要是方便使用，交互逻辑优化
+
+1、可以自动创建私钥，也可以从别的地方生成私钥之后导入
+
+![image](https://raw.githubusercontent.com/robotchangzhang/nftqianggou/main/img/20.jpg)
+
+2、更新EIP1559调用gas的方法，可以实时动态的设置gas price
+
+![image](https://raw.githubusercontent.com/robotchangzhang/nftqianggou/main/img/21.jpg)
+
+3、可以选择使用二进制方式直接跟别人的单子
+
+![image](https://raw.githubusercontent.com/robotchangzhang/nftqianggou/main/img/23.png)
+
+4、也可以选择像在区块链游览器交互那样通过ABI交互，ABI模式分为开源的和闭源的两种模式
+
+![image](https://raw.githubusercontent.com/robotchangzhang/nftqianggou/main/img/24.jpg)
+
+---------------------------------------------旧版本------------------------
+
+
 
 **第一步配置私钥**
 
