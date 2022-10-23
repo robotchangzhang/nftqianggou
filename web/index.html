@@ -74,10 +74,13 @@
               <label for="qianggougas" class="form-label">Gas</label>
               <input type="number" class="form-control" id="qianggougas" placeholder="Gas" value="0">
             </div>
+
             <div class="mb-2" id="divmaxPriorityFeePerGas">
+              <button class="btn btn-warning " id="autogetgas" onclick="autogetgas()">启动自动获取gas</button>
+              <br>
               <label for="qianggoumaxPriorityFeePerGas" class="form-label">Gas小费</label>
               <input type="number" class="form-control" id="qianggoumaxPriorityFeePerGas" placeholder="Gas 小费"
-                value="0">
+                value="2">
             </div>
             <div class="mb-2" id="divmaxFeePerGas">
               <label for="qianggoumaxFeePerGas" class="form-label">Gas最大使用</label>
@@ -128,6 +131,7 @@
               <input class="form-control" type="text" name="name" id="Contractaddress" placeholder="0x000000..." />
             </div>
             <button type="button" onclick="queryContarct()" class="btn btn-primary btn-add">查询智能合约</button>
+            <button type="button" onclick="LoadlocalABI()" class="btn btn-primary btn-add">加载本地abi模式</button>
             <hr>
 
             <div class="mb-2">
@@ -173,6 +177,8 @@
                 <br>
                 <button class="btn btn-warning" onclick="importprikey()">导入私钥</button>
                 <button class="btn btn-warning" onclick="exportprikey()">导出私钥</button>
+
+                <button class="btn btn-warning" onclick="getmaxprice()">获得最大gas</button>
               </div>
             </div>
           </div>

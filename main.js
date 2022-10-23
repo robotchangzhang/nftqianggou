@@ -3,6 +3,8 @@ const electron = require('electron')
 const path = require('path')
 const qianggou = require('./duoxiancheng')
 const queryContract = require("./dealContract")
+const schedule = require('node-schedule');
+const { dialog } = require('electron')
 
 const ipcMain = electron.ipcMain
 const app = electron.app
@@ -63,7 +65,7 @@ const eventListener = async () => {
     console.log("info:initweb3");
     console.log(value)
     result = qianggou.initWeb3(value)
-    
+
     mainWindow.webContents.send("info:initweb3", { result });
   })
 
@@ -114,43 +116,92 @@ const eventListener = async () => {
     console.log("info:creatpriatenumber");
     console.log(value)
     result = qianggou.creatpriatenumber(value);
-   
+
 
     mainWindow.webContents.send("info:creatpriatenumber", { result });
   })
 
   ipcMain.on('info:importprikey', async (e, value) => {
     console.log("info:importprikey");
+
     
-    const { dialog } = require('electron')
     filename = await dialog.showOpenDialog({ properties: ['openFile'] });
-    if(filename.canceled == false)
-    {
+    if (filename.canceled == false) {
       qianggou.importprikey(filename.filePaths);
     }
-    
+
     //result = 
-   
+
 
     //mainWindow.webContents.send("info:importprikey", {  });
   })
 
   ipcMain.on('info:exportprikey', async (e, value) => {
     console.log("info:exportprikey");
+
     
-    const { dialog } = require('electron')
     filename = await dialog.showOpenDialog({ properties: ['openDirectory'] });
-    if(filename.canceled == false)
-    {
+    if (filename.canceled == false) {
       qianggou.exportprikey(filename.filePaths);
     }
-    
+
     //result = 
-   
+
 
     //mainWindow.webContents.send("info:importprikey", {  });
   })
 
+
+  ipcMain.on('info:getmaxgasprice', async (e, value) => {
+    console.log("info:getmaxgasprice");
+    qianggou.CalcGasPrice();
+
+
+  })
+
+  ipcMain.on('info:loadlocalABI', async (e, value) => {
+    console.log("info:loadlocalABI");
+   
+
+    
+    filename = await dialog.showOpenDialog({ properties: ['openFile'] });
+    if (filename.canceled == false) {
+      result = await queryContract.loadlocalABI(filename.filePaths[0])
+
+      mainWindow.webContents.send("info:queryabi", { result });
+    }
+   
+
+  })
+
+
+  var renwu = null;
+
+  //启动定时监控，关闭定时监控
+  ipcMain.on('info:startgetmaxgasprice', async (e, value) => {
+    console.log("info:startgetmaxgasprice");
+    qianggou.CalcGasPrice();
+    //开启定时任务
+    if (renwu == null) {
+      renwu = task1()
+    }
+    
+    else {
+      
+    }
+  })
+
+  const task1 = async ()=>{
+    //每分钟的1-10秒都会触发，其它通配符依次类推
+    //console.log("123111");
+    //console.log(value);
+    //console.log(count);
+    const j = schedule.scheduleJob('*/5 * * * * *', async ()=>{
+      
+     await  qianggou.CalcGasPrice();
+    })
+    return j;
+  }
 
 }
 

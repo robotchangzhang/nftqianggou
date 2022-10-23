@@ -412,10 +412,25 @@ function changefunctionEX(name, value) {
 }
 
 ipcRenderer.on('info:msg', (e, value) => {
+  
   console.log(value.msg)
 
 
 });
+
+ipcRenderer.on('info:setnowgasprice', (e, value) => {
+  //debugger;
+  if(bautogetgas)
+  {
+    var xiaofei =Number(value.maxgasprice) + Number(document.querySelector('#qianggoumaxPriorityFeePerGas').value);
+    document.querySelector('#qianggoumaxFeePerGas').value =  Number(xiaofei);
+  }
+    
+  
+
+});
+
+
 
 var accountHolder = document.getElementById('priAccounts');
 ipcRenderer.on('info:accounts', (e, value) => {
@@ -441,3 +456,29 @@ ipcRenderer.on('info:accounts', (e, value) => {
 setTimeout(() => {
   ipcRenderer.send('info:accounts', null)
 }, 300);
+
+
+var bautogetgas = false
+function autogetgas()
+{
+    var mybutton =  document.querySelector('#autogetgas');
+    if(bautogetgas)
+    {
+      //关闭自动获取
+      bautogetgas = false;
+      mybutton.innerHTML = "启动自动获取gas"
+    }
+    else
+    {
+      //启动自动获取
+      bautogetgas = true;
+      mybutton.innerHTML = "关闭自动获取gas"
+      ipcRenderer.send('info:startgetmaxgasprice', null)
+    }
+}
+
+function LoadlocalABI()
+{
+  ipcRenderer.send('info:loadlocalABI', null)
+}
+

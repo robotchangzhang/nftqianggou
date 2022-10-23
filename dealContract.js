@@ -1,5 +1,5 @@
 const axios = require('axios');
-
+var fs = require('fs');
 //bsc
 //tokenaddress = "0x6B653D6dC0EECbb94256fb269593AA0A8736a3bD"
 //apiurl = 'https://api.bscscan.com/api?module=contract&action=getsourcecode&address='
@@ -92,6 +92,17 @@ async function start(value) {
     return await startEx(value.apiurl, value.contractaddress);
 }
 
+function loadlocalABI(filename)
+{
+    
+    //读取 abi
+    var abi = fs.readFileSync(filename).toString();
+    var jsonabi = JSON.parse(abi);
+    console.log(jsonabi);
+    return fenxiabi(jsonabi);
+}
+
 module.exports = {
-    start, start
+    start:start,
+    loadlocalABI:loadlocalABI,
 }

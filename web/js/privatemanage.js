@@ -36,4 +36,6 @@ function exportprikey() {
 
 }
 
-
+function getmaxprice(){
+  ipcRenderer.send('info:getmaxgasprice', null)
+}
