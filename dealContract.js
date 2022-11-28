@@ -12,17 +12,46 @@ var fs = require('fs');
 //matic
 //tokenaddress = "0x2f85e99067ddefb7f6d0f71efa32cc0056d322bb"
 //apiurl = 'https://api.polygonscan.com/api?module=contract&action=getsourcecode&address='
+require('dotenv').config()
+const { env } = process
+
+const useproxy = Number(env.PROXYUSE)
+
+let opts = {
+
+    host: env.PROXYIP,
+    
+    port: Number(env.PROXYPORT)
+    
+    }
+
+
 async function getContract(url, address) {
     return new Promise((resolve, reject) => {
-        axios.post(url + address).then(res => {
-            if (res.data.status == 1) {
-                resolve([true, res.data.result[0]]);
-
-            }
-            else {
-                reject([false, "未找到"]);
-            }
-        })
+        if(useproxy==1)
+        {
+            axios.post(url + address,{proxy:opts}).then(res => {
+                if (res.data.status == 1) {
+                    resolve([true, res.data.result[0]]);
+    
+                }
+                else {
+                    reject([false, "未找到"]);
+                }
+            })
+        }
+        else
+        {
+            axios.post(url + address).then(res => {
+                if (res.data.status == 1) {
+                    resolve([true, res.data.result[0]]);
+    
+                }
+                else {
+                    reject([false, "未找到"]);
+                }
+            })
+        }
     })
 }
 

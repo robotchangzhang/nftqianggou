@@ -18,6 +18,10 @@
     </h1>
     <button class="btn btn-warning" onclick="changepage('jiaohu')">交互页面</button>
     <button class="btn btn-warning" onclick="changepage('manageprikey')">私钥管理页面</button>
+    <!--
+    <button class="btn btn-warning" onclick="changepage('highfunction')">高级功能</button>
+    <button class="btn btn-warning" onclick="changepage('melody')">melody</button>
+    -->
     <div class="row">
       <div class="col" id="tabjiaohu">
         <div class="card">
@@ -178,8 +182,72 @@
                 <button class="btn btn-warning" onclick="importprikey()">导入私钥</button>
                 <button class="btn btn-warning" onclick="exportprikey()">导出私钥</button>
 
+
                 <!--<button class="btn btn-warning" onclick="getmaxprice()">获得最大gas</button> -->
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col" id="highfunction" style="display: none;">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">高级功能</h4>
+            <hr>
+            <div>
+              <div class="mb-2">
+
+                <label for="network" class="form-label">归集地址</label>
+                <button class="btn btn-warning " id="guijinumbertype" onclick="guijinumbertype()">固定数量模式</button>
+                <button class="btn btn-warning " id="guijinumbertype" onclick="guijinumbertype()">固定百分比模式</button>
+                <input class="form-control" type="string" name="name" id="guijiaddress" placeholder="10" />
+                <hr>
+                <div class="mb-2">
+                  <label for="network" class="form-label">归集主币</label>
+                  <br>
+                  <label for="network" class="form-label">eth数量</label>
+                  <input class="form-control" type="number" name="name" id="guijiethnumber" placeholder="10" />
+                  <label for="network" class="form-label">eth百分比</label>
+                  <input class="form-control" type="number" name="name" id="guijiethpct" placeholder="10" />
+                  <button class="btn btn-warning" onclick="guijieth()">归集主币</button>
+                </div>
+                <hr>
+                <div class="mb-2">
+                  <label for="network" class="form-label">归集token</label>
+                  <br>
+                  <label for="network" class="form-label">token地址</label>
+                  <input class="form-control" type="number" name="name" id="guijitokenaddress" placeholder="10" />
+                  <label for="network" class="form-label">token数量</label>
+                  <input class="form-control" type="number" name="name" id="guijitokennumber" placeholder="10" />
+                  <label for="network" class="form-label">token百分比</label>
+                  <input class="form-control" type="number" name="name" id="guijitokenpct" placeholder="10" />
+                  <button class="btn btn-warning" onclick="guijitoken()">归集token</button>
+                </div>
+                <!--<button class="btn btn-warning" onclick="getmaxprice()">获得最大gas</button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col" id="melodycheck" style="display: none;">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">melody功能</h4>
+            <hr>
+            <div>
+              <button class="btn btn-warning" onclick="mytest()">查询区块链数据</button>
+              <br>
+              <label for="network" class="form-label">盒子开出S的概率：</label>
+              <br>
+              <label for="network" class="form-label">要查询的盒子编号：</label>
+              <br>
+              <input class="form-control" type="number" name="name" id="boxid" placeholder="10" />
+
+              <button class="btn btn-warning" onclick="boxcheck()">查询盒子概率</button>
+
+
             </div>
           </div>
         </div>

@@ -15,7 +15,7 @@
     },
     {
         "network": "Goerli",
-        "rpc": "http:///goerli.infura.io/v3/e1d0b7dea53643a194cadb6ed123f88e",
+        "rpc": "https://eth-goerli.g.alchemy.com/v2/ogul4IQr3nQ_8qJ2U7ddatxz9cyfIZXQ",
         "ws": "",
         "chainid": "5",
         "apiurl": "https://api-goerli.etherscan.io/api?module=contract&action=getsourcecode&address="

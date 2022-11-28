@@ -1,3 +1,4 @@
+//const { ipcRenderer } = require("electron");
 
 
 //查询智能合约功能
@@ -17,11 +18,28 @@ function changepage(pagename) {
   if (pagename == "jiaohu") {
     document.querySelector('#tabmanageprikey').style.display = 'none';
     document.querySelector('#tabjiaohu').style.display = 'block';
-
+    document.querySelector('#highfunction').style.display = 'none';
+    document.querySelector('#melodycheck').style.display = 'none';
   }
-  else {
+  else if(pagename == "manageprikey"){
     document.querySelector('#tabmanageprikey').style.display = 'block';
     document.querySelector('#tabjiaohu').style.display = 'none';
+    document.querySelector('#highfunction').style.display = 'none';
+    document.querySelector('#melodycheck').style.display = 'none';
+  }
+  else if(pagename == "highfunction")
+  {
+    document.querySelector('#tabmanageprikey').style.display = 'none';
+    document.querySelector('#tabjiaohu').style.display = 'none';
+    document.querySelector('#highfunction').style.display = 'block';
+    document.querySelector('#melodycheck').style.display = 'none';
+  }
+  else if(pagename == "melody")
+  {
+    document.querySelector('#tabmanageprikey').style.display = 'none';
+    document.querySelector('#tabjiaohu').style.display = 'none';
+    document.querySelector('#highfunction').style.display = 'none';
+    document.querySelector('#melodycheck').style.display = 'block';
   }
 }
 
@@ -38,4 +56,16 @@ function exportprikey() {
 
 function getmaxprice(){
   ipcRenderer.send('info:getmaxgasprice', null)
+}
+
+
+function mytest()
+{
+  ipcRenderer.send('info:mytest', null)
+}
+
+function boxcheck()
+{
+  var tokenid = document.querySelector('#boxid').value;
+  ipcRenderer.send('info:boxcheck',{tokenid})
 }

@@ -10,6 +10,9 @@ const ipcMain = electron.ipcMain
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 
+
+
+
 let mainWindow = null
 function createWindow() {
   // Create the browser window.
@@ -55,6 +58,8 @@ app.whenReady().then(() => {
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
 })
+
+//app.commandLine.appendSwitch('proxy-server', 'socks5://127.0.0.1:10808');
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
@@ -159,6 +164,17 @@ const eventListener = async () => {
 
   })
 
+  
+
+  ipcMain.on('info:boxcheck', async (e, value) => {
+    console.log("info:boxcheck");
+    qianggou.boxcheck(value);
+
+
+   
+
+  })
+
   ipcMain.on('info:loadlocalABI', async (e, value) => {
     console.log("info:loadlocalABI");
    
@@ -189,6 +205,12 @@ const eventListener = async () => {
     else {
       
     }
+  })
+
+  ipcMain.on('info:mytest', async (e, value) => {
+    console.log("info:mytest");
+    qianggou.mytest();
+   
   })
 
   const task1 = async ()=>{
