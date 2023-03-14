@@ -5,7 +5,7 @@ const qianggou = require('./duoxiancheng')
 const queryContract = require("./dealContract")
 const schedule = require('node-schedule');
 const { dialog } = require('electron')
-
+const punk = require('./btcord')
 const ipcMain = electron.ipcMain
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
@@ -31,6 +31,7 @@ function createWindow() {
   // and load the index.html of the app.
   mainWindow.loadFile('./web/index.html')
   qianggou.setmainWindow(mainWindow);
+  punk.setmainWindow(mainWindow);
   //const mainMenu = Menu.buildFromTemplate(menuTemplate);
   //Menu.setApplicationMenu(mainMenu);
   // Open the DevTools.
@@ -141,6 +142,8 @@ const eventListener = async () => {
     //mainWindow.webContents.send("info:importprikey", {  });
   })
 
+  
+
   ipcMain.on('info:exportprikey', async (e, value) => {
     console.log("info:exportprikey");
 
@@ -224,6 +227,38 @@ const eventListener = async () => {
     })
     return j;
   }
+  ipcMain.on('info:getbtccookiepath', async (e, value) => {
+    console.log("info:getbtccookiepath");
+    filename = await dialog.showOpenDialog({ properties: ['openFile'] });
+    if (filename.canceled == false) {
+
+      mainWindow.webContents.send("info:getbtccookiepath", { "filename":filename.filePaths });
+    }
+  })
+
+
+  ipcMain.on('info:btcsetting', async (e, value) => {
+    console.log("info:btcsetting");
+    punk.setInit(value)
+  })
+
+  ipcMain.on('info:punkimgdownload', async (e, value) => {
+    console.log("info:punkimgdownload");
+    punk.punkimgdownload()
+  })
+
+  ipcMain.on('info:punkselectblockinfo', async (e, value) => {
+    console.log("info:punkselectblockinfo");
+    punk.punkselectblockinfo()
+  })
+
+  ipcMain.on('info:punkidselect', async (e, value) => {
+    console.log("info:punkidselect");
+    var info = punk.punkidselect(value.punkid)
+    mainWindow.webContents.send("info:getbtccookiepath", { info });
+
+  })
+
 
 }
 

@@ -18,6 +18,7 @@
     </h1>
     <button class="btn btn-warning" onclick="changepage('jiaohu')">交互页面</button>
     <button class="btn btn-warning" onclick="changepage('manageprikey')">私钥管理页面</button>
+    <button class="btn btn-warning" onclick="changepage('btcpunk')">BTC PUNK</button>
     <!--
     <button class="btn btn-warning" onclick="changepage('highfunction')">高级功能</button>
     <button class="btn btn-warning" onclick="changepage('melody')">melody</button>
@@ -253,8 +254,47 @@
         </div>
       </div>
 
-      <div class="col" style="max-width: 450px; height: 100vh;">
+      <div class="col" id="btcordnft" style="display: none;">
         <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">btcordnft</h4>
+            <hr>
+            <div>
+              <label>ord 区块链浏览器地址：</label>
+              <input class="form-control" type="text" name="name" id="btcordrpc" placeholder=""
+                value="http://127.0.0.1" />
+
+              <br>
+              <label>btc rpc 地址：</label>
+              <input class="form-control" type="text" name="name" id="btcrpc" placeholder=""
+                value="http://127.0.0.1:8332" />
+
+              <br>
+              <label>btc cookie 路径：</label>
+              <input class="form-control" type="text" name="name" id="btccookiepath" placeholder=""
+                value="" /> <button class="btn btn-warning" onclick="getbtccookiepath()">打开</button>
+              <br>
+              <button class="btn btn-warning" onclick="btcsetting()">设置</button>
+              <br>
+
+              <label>punk 下载图片功能</label>
+              <button class="btn btn-warning" onclick="punkimgdownload()">下载</button>
+              <br>
+              
+              
+              <label>punk 查询区块数据</label>
+              <button class="btn btn-warning" onclick="punkselectblockinfo()">下载</button>
+              <br>
+              <label>punk 依据punkid 查询nft</label>
+              <input class="form-control" type="number" name="name" id="punkid" placeholder="1001" />
+              <button class="btn btn-warning" onclick="punkidselect()">查询</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col"  style="max-width: 450px; height: 100vh;">
+        <div class="card" id="alladdress">
           <div class="card-body">
             <h4 class="card-title">导入账户</h4>
             <hr>
@@ -278,6 +318,7 @@
   <script src="../renderer.js"></script>
   <script src="./js/webmain.js"></script>
   <script src="./js/privatemanage.js"></script>
+  <script src="./js/btcpunk.js"></script>
 </body>
 
 <script>

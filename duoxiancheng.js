@@ -480,7 +480,7 @@ async function abishiyong(value) {
             //如果10个号，直接多线程
             //qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit);
             //如果1000个号，还是用单线程模式
-            await qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit, gastype, maxPriorityFeePerGas, maxFeePerGas);
+            qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit, gastype, maxPriorityFeePerGas, maxFeePerGas);
         }
         //break;
     }

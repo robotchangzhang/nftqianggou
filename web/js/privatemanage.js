@@ -15,32 +15,67 @@ function reloadaddress() {
 }
 
 function changepage(pagename) {
-  if (pagename == "jiaohu") {
-    document.querySelector('#tabmanageprikey').style.display = 'none';
-    document.querySelector('#tabjiaohu').style.display = 'block';
-    document.querySelector('#highfunction').style.display = 'none';
-    document.querySelector('#melodycheck').style.display = 'none';
-  }
-  else if(pagename == "manageprikey"){
-    document.querySelector('#tabmanageprikey').style.display = 'block';
-    document.querySelector('#tabjiaohu').style.display = 'none';
-    document.querySelector('#highfunction').style.display = 'none';
-    document.querySelector('#melodycheck').style.display = 'none';
-  }
-  else if(pagename == "highfunction")
+
+  var pagenamelist = ['jiaohu','manageprikey','highfunction','melody','btcpunk']
+  var pagenameele = ['#tabjiaohu','#tabmanageprikey','#highfunction','#melodycheck','#btcordnft'] 
+
+  var pageindex = 0;
+  for(var i=0;i<pagenamelist.length;i++)
   {
-    document.querySelector('#tabmanageprikey').style.display = 'none';
-    document.querySelector('#tabjiaohu').style.display = 'none';
-    document.querySelector('#highfunction').style.display = 'block';
-    document.querySelector('#melodycheck').style.display = 'none';
+    if(pagename == pagenamelist[i])
+    {
+      pageindex = i;
+      break;
+    }
   }
-  else if(pagename == "melody")
+  for(var i=0;i<pagenameele.length;i++)
   {
-    document.querySelector('#tabmanageprikey').style.display = 'none';
-    document.querySelector('#tabjiaohu').style.display = 'none';
-    document.querySelector('#highfunction').style.display = 'none';
-    document.querySelector('#melodycheck').style.display = 'block';
+    if(i== pageindex)
+    {
+      document.querySelector(pagenameele[i]).style.display = 'block';
+    }
+    else
+    {
+      document.querySelector(pagenameele[i]).style.display = 'none';
+    }
   }
+
+  if(pagename != "btcpunk")
+  {
+    
+    document.querySelector("#alladdress").style.display = 'block';
+  }
+  else
+  {
+    document.querySelector("#alladdress").style.display = 'none';
+  }
+
+  // if (pagename == "jiaohu") {
+  //   document.querySelector('#tabmanageprikey').style.display = 'none';
+  //   document.querySelector('#tabjiaohu').style.display = 'block';
+  //   document.querySelector('#highfunction').style.display = 'none';
+  //   document.querySelector('#melodycheck').style.display = 'none';
+  // }
+  // else if(pagename == "manageprikey"){
+  //   document.querySelector('#tabmanageprikey').style.display = 'block';
+  //   document.querySelector('#tabjiaohu').style.display = 'none';
+  //   document.querySelector('#highfunction').style.display = 'none';
+  //   document.querySelector('#melodycheck').style.display = 'none';
+  // }
+  // else if(pagename == "highfunction")
+  // {
+  //   document.querySelector('#tabmanageprikey').style.display = 'none';
+  //   document.querySelector('#tabjiaohu').style.display = 'none';
+  //   document.querySelector('#highfunction').style.display = 'block';
+  //   document.querySelector('#melodycheck').style.display = 'none';
+  // }
+  // else if(pagename == "melody")
+  // {
+  //   document.querySelector('#tabmanageprikey').style.display = 'none';
+  //   document.querySelector('#tabjiaohu').style.display = 'none';
+  //   document.querySelector('#highfunction').style.display = 'none';
+  //   document.querySelector('#melodycheck').style.display = 'block';
+  // }
 }
 
 function importprikey() {
