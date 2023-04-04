@@ -436,7 +436,7 @@ function setmainWindow(newmainWindow) {
     mainWindow = newmainWindow;
 }
 
-async function abishiyong(value) {
+async function abishiyong(value,bretry = false) {
     //return;
     var abi = value.useabi;
     var gas = value.gas;
@@ -448,7 +448,7 @@ async function abishiyong(value) {
     var gastype = value.nowgastype;
     for (priKey of priKeys) {
         //这里要复制数字，不然就是指针模式
-        var okvalue = value.okvalue;
+        var okvalue = [].concat(value.okvalue);
         // 创建abi二进制
         // 如果要填自己的地址 ,默认通配符是 myaddress
         address = "0x" + util.privateToAddress(priKey).toString('hex');
@@ -480,8 +480,16 @@ async function abishiyong(value) {
             //如果10个号，直接多线程
             //qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit);
             //如果1000个号，还是用单线程模式
-            qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit, gastype, maxPriorityFeePerGas, maxFeePerGas);
-        }
+            try
+            {
+                await qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit, gastype, maxPriorityFeePerGas, maxFeePerGas);
+
+            }
+            catch(e)
+            {
+                console.log(e)
+            }
+    }
         //break;
     }
 }
