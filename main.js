@@ -160,6 +160,26 @@ const eventListener = async () => {
   })
 
 
+  ipcMain.on('info:pilianglingshui', async (e, value) => {
+    console.log("info:pilianglingshui");
+    filename = await dialog.showOpenDialog({ properties: ['openFile'] });
+    if (filename.canceled == false) {
+      try {
+        const dynamicModule = require(filename.filePaths[0]);
+        if (typeof dynamicModule.start === 'function') {
+          await dynamicModule.start();
+        } else {
+          console.error(`Error: The file ${filename} does not have a start function.`);
+        }
+        clearModuleCache(filename.filePaths[0]);
+      } catch (error) {
+        console.error(`Error loading and executing file: ${filename}`, error);
+      }
+     
+    }
+
+  })
+
   ipcMain.on('info:getmaxgasprice', async (e, value) => {
     console.log("info:getmaxgasprice");
     qianggou.CalcGasPrice();
@@ -260,6 +280,14 @@ const eventListener = async () => {
   })
 
 
+}
+function clearModuleCache(modulePath) {
+  try {
+    const resolvedPath = require.resolve(modulePath);
+    delete require.cache[resolvedPath];
+  } catch (error) {
+    console.error(`Error clearing module cache for: ${modulePath}`, error);
+  }
 }
 
 eventListener();

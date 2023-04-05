@@ -47,6 +47,13 @@
         "ws": "",
         "chainid": "56",
         "apiurl": "https://api.bscscan.com/api?module=contract&action=getsourcecode&address="
+    },
+    {
+        "network": "Sepolia",
+        "rpc": "https://sepolia.infura.io/v3/e1d0b7dea53643a194cadb6ed123f88e",
+        "ws": "wss://sepolia.infura.io/v3/e1d0b7dea53643a194cadb6ed123f88e",
+        "chainid": "11155111",
+        "apiurl": "https://sepolia.etherscan.io/api?module=contract&action=getsourcecode&address="
     }
 
 ]

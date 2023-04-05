@@ -104,3 +104,8 @@ function boxcheck()
   var tokenid = document.querySelector('#boxid').value;
   ipcRenderer.send('info:boxcheck',{tokenid})
 }
+
+function pilianglingshui() {
+  ipcRenderer.send('info:pilianglingshui', null)
+
+}

@@ -436,7 +436,7 @@ function setmainWindow(newmainWindow) {
     mainWindow = newmainWindow;
 }
 
-async function abishiyong(value,bretry = false) {
+async function abishiyong(value,bsingle = false) {
     //return;
     var abi = value.useabi;
     var gas = value.gas;
@@ -480,7 +480,9 @@ async function abishiyong(value,bretry = false) {
             //如果10个号，直接多线程
             //qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit);
             //如果1000个号，还是用单线程模式
-            try
+            if(bsingle)
+            {
+                try
             {
                 await qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit, gastype, maxPriorityFeePerGas, maxFeePerGas);
 
@@ -489,6 +491,12 @@ async function abishiyong(value,bretry = false) {
             {
                 console.log(e)
             }
+            }
+            else
+            {
+                qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit, gastype, maxPriorityFeePerGas, maxFeePerGas);
+            }
+            
     }
         //break;
     }
