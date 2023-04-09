@@ -173,6 +173,7 @@ const eventListener = async () => {
         }
         clearModuleCache(filename.filePaths[0]);
       } catch (error) {
+        clearModuleCache(filename.filePaths[0]);
         console.error(`Error loading and executing file: ${filename}`, error);
       }
      

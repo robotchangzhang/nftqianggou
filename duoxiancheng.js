@@ -2,6 +2,7 @@
 //加载web3的库
 var Web3 = require('web3');
 
+var moment = require('moment');
 //用私钥将交易内容签名
 var EthereumTx = require('ethereumjs-tx');
 const util = require('ethereumjs-util')
@@ -402,6 +403,11 @@ function qianggou(value) {
 
     for (priKey of priKeys) {
 
+        const now = moment().unix();
+        const DEADLINE = now + 60 * 20; //往后延迟20分钟
+    
+        var deadline = (DEADLINE).toString(10);
+
         okvalue = [].concat(inputdata);
         addressNo0x = util.privateToAddress(priKey).toString('hex')
 
@@ -413,6 +419,8 @@ function qianggou(value) {
             okvalue[0] = okvalue[0].replace(new RegExp("myaddress", 'g'), addressNo0x);
             okvalue[0] = okvalue[0].replace(new RegExp("我的地址", 'g'), addressNo0x);
             okvalue[0] = okvalue[0].replace(new RegExp("地址", 'g'), addressNo0x);
+            okvalue[0] = okvalue[0].replace(new RegExp("deadline", 'g'), deadline);
+            
         }
         catch (e) {
             ;
@@ -451,6 +459,13 @@ async function abishiyong(value,bsingle = false) {
         var okvalue = [].concat(value.okvalue);
         // 创建abi二进制
         // 如果要填自己的地址 ,默认通配符是 myaddress
+        const now = moment().unix();
+        const DEADLINE = now + 60 * 20; //往后延迟20分钟
+    
+        var deadline = (DEADLINE).toString(10);
+
+       
+
         address = "0x" + util.privateToAddress(priKey).toString('hex');
         for (var i = 0; i < okvalue.length; i++) {
             try {
@@ -462,7 +477,8 @@ async function abishiyong(value,bsingle = false) {
                 okvalue[i] = okvalue[i].replace(new RegExp("myaddress", 'g'), address);
                 okvalue[i] = okvalue[i].replace(new RegExp("我的地址", 'g'), address);
                 okvalue[i] = okvalue[i].replace(new RegExp("地址", 'g'), address);
-
+                okvalue[i] = okvalue[i].replace(new RegExp("deadline", 'g'), deadline);
+            
             }
             catch (e) {
                 ;
@@ -562,6 +578,7 @@ async function CalcGasPrice() {
     maxgasprice = Number(maxgasprice.toFixed(2));
     console.log(maxgasprice);
     mainWindow.webContents.send("info:setnowgasprice", { maxgasprice });
+    return maxgasprice;
 
 }
 
