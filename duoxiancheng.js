@@ -626,7 +626,7 @@ async function CalcGasPrice() {
     let gasPrice = await web3.eth.getGasPrice();
     let nowgasprice = web3.utils.fromWei((gasPrice).toString(10), 'Gwei');
     let maxgasprice = Number(nowgasprice) * (1.125 ** 4);
-    maxgasprice = Number(maxgasprice.toFixed(2));
+    maxgasprice = Number(maxgasprice.toFixed(9));
     console.log(maxgasprice);
     mainWindow.webContents.send("info:setnowgasprice", { maxgasprice });
     return maxgasprice;
