@@ -625,8 +625,13 @@ function importprikey(filepath) {
 async function CalcGasPrice() {
     let gasPrice = await web3.eth.getGasPrice();
     let nowgasprice = web3.utils.fromWei((gasPrice).toString(10), 'Gwei');
+    if(Number(nowgasprice)<0.01)
+    {
+        nowgasprice = 0.01
+    }
     let maxgasprice = Number(nowgasprice) * (1.125 ** 4);
-    maxgasprice = Number(maxgasprice.toFixed(9));
+    
+    maxgasprice = Number(maxgasprice.toFixed(2));
     console.log(maxgasprice);
     mainWindow.webContents.send("info:setnowgasprice", { maxgasprice });
     return maxgasprice;
