@@ -444,6 +444,57 @@ function setmainWindow(newmainWindow) {
     mainWindow = newmainWindow;
 }
 
+async function GetAbiInfoNoprikey(functionname,abi,abiokvalue,nftaddress)
+{
+   // var okvalue = [].concat[abiokvalue];
+    var tokenContract = new web3.eth.Contract([abi], nftaddress);
+    var functionname = abi.name;
+    let result = await tokenContract.methods[functionname].apply(null, abiokvalue).call()
+    return result;
+}
+
+async function GetAbiInfo(functionname,abi,abiokvalue,nftaddress)
+{
+    var results = []
+    for (priKey of priKeys) {
+        //这里要复制数字，不然就是指针模式
+        var okvalue = [].concat(abiokvalue);
+        // 创建abi二进制
+        // 如果要填自己的地址 ,默认通配符是 myaddress
+        const now = moment().unix();
+        const DEADLINE = now + 60 * 20; //往后延迟20分钟
+    
+        var deadline = (DEADLINE).toString(10);
+
+       
+
+        address = "0x" + util.privateToAddress(priKey).toString('hex');
+        for (var i = 0; i < okvalue.length; i++) {
+            try {
+
+                //只能替换第一个匹配的
+                //okvalue[0] = okvalue[0].replace("myaddress", addressNo0x)
+                //okvalue[0] = okvalue[0].replace("地址", addressNo0x)
+                //用正则才能全部替换
+                okvalue[i] = okvalue[i].replace(new RegExp("myaddress", 'g'), address);
+                okvalue[i] = okvalue[i].replace(new RegExp("我的地址", 'g'), address);
+                okvalue[i] = okvalue[i].replace(new RegExp("地址", 'g'), address);
+                okvalue[i] = okvalue[i].replace(new RegExp("deadline", 'g'), deadline);
+            
+            }
+            catch (e) {
+                ;
+            }
+        }
+    var tokenContract = new web3.eth.Contract([abi], nftaddress);
+    var functionname = abi.name;
+    let result = await tokenContract.methods[functionname].apply(null, okvalue).call()
+    results.push[address,result];
+
+    }
+    return results;
+}
+
 async function abishiyong(value,bsingle = false) {
     //return;
     var abi = value.useabi;
@@ -854,6 +905,70 @@ function fenxiEX(value)
    }
 }
 
+function stringtonum(stringnumber,decimals)
+{
+    var length = stringnumber.length;
+    if(length>decimals)
+    {
+        stringfirst = stringnumber.substring(0,length-decimals);
+        stringse = stringnumber.substring(length-decimals,length);
+        return stringfirst + "." + stringse;
+    }
+    else
+    {
+        var tmp = "0."
+        for(var i=0;i<length-decimals;i++)
+        {
+            tmp +="0";
+        }
+        return tmp + stringnumber
+    }
+}
+
+function numtostring(number,decimals)
+{
+    
+    //将number 转为string
+    var strnumber = number.toString(10);
+    
+    //获取小数点后面有几位小数
+    var dotpos = strnumber.indexOf(".");
+    if(dotpos!=-1)
+    {
+        var tmplength =strnumber.length - dotpos-1;
+        if(tmplength < decimals)
+        {
+            strnumber = strnumber.replace(".","");
+            for(var i=0;i<decimals-tmplength;i++)
+            {
+                strnumber += "0";
+            }
+        }
+        else
+        {
+            var removenumber = tmplength - decimals;
+            strnumber = strnumber.substring(0,strnumber.length-removenumber);
+            strnumber = strnumber.replace(".","");
+        }
+        if(dotpos==1)
+        {
+            strnumber = strnumber.substring(1,strnumber.length);
+        }
+    }
+    else
+    {
+        for(var i=0;i<decimals;i++)
+            {
+                strnumber += "0";
+            }
+    }
+    return strnumber;
+
+}
+
+
+
+
 function boxcheck(value)
 {
     fenxiEX(value)
@@ -874,5 +989,8 @@ module.exports = {
     guijieth: guijieth,
     guijitoken: guijitoken,
     boxcheck:boxcheck,
+    GetAbiInfoNoprikey:GetAbiInfoNoprikey,
+    numtostring:numtostring,
+    stringtonum:stringtonum
 }
 
