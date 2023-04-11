@@ -569,6 +569,83 @@ async function abishiyong(value,bsingle = false) {
     }
 }
 
+async function abishiyongbyaddress(value,bsingle = false,nowaddress) {
+    //return;
+    var abi = value.useabi;
+    var gas = value.gas;
+    var gaslimit = value.gaslimit;
+    var nftaddress = value.nftaddress;
+    var neth = value.neth;
+    var maxPriorityFeePerGas = value.maxPriorityFeePerGas;
+    var maxFeePerGas = value.maxFeePerGas;
+    var gastype = value.nowgastype;
+    for (priKey of priKeys) {
+        //这里要复制数字，不然就是指针模式
+        var okvalue = [].concat(value.okvalue);
+        // 创建abi二进制
+        // 如果要填自己的地址 ,默认通配符是 myaddress
+        const now = moment().unix();
+        const DEADLINE = now + 60 * 20; //往后延迟20分钟
+    
+        var deadline = (DEADLINE).toString(10);
+
+       
+
+        address = "0x" + util.privateToAddress(priKey).toString('hex');
+        if(address != nowaddress)
+        {
+            continue;
+        }
+        for (var i = 0; i < okvalue.length; i++) {
+            try {
+
+                //只能替换第一个匹配的
+                //okvalue[0] = okvalue[0].replace("myaddress", addressNo0x)
+                //okvalue[0] = okvalue[0].replace("地址", addressNo0x)
+                //用正则才能全部替换
+                okvalue[i] = okvalue[i].replace(new RegExp("myaddress", 'g'), address);
+                okvalue[i] = okvalue[i].replace(new RegExp("我的地址", 'g'), address);
+                okvalue[i] = okvalue[i].replace(new RegExp("地址", 'g'), address);
+                okvalue[i] = okvalue[i].replace(new RegExp("deadline", 'g'), deadline);
+            
+            }
+            catch (e) {
+                ;
+            }
+        }
+        if (abi.stateMutability == "view") {
+            var tokenContract = new web3.eth.Contract([abi], nftaddress);
+            var functionname = abi.name;
+            let result = await tokenContract.methods[functionname].apply(null, okvalue).call()
+            sendmsg("地址：" + address + "调用方法：" + functionname + "结果为" + result);
+
+        }
+        else {
+            var inputdata = web3.eth.abi.encodeFunctionCall(abi, okvalue);
+            //如果10个号，直接多线程
+            //qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit);
+            //如果1000个号，还是用单线程模式
+            if(bsingle)
+            {
+                try
+            {
+                await qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit, gastype, maxPriorityFeePerGas, maxFeePerGas);
+
+            }
+            catch(e)
+            {
+                console.log(e)
+            }
+            }
+            else
+            {
+                qianggouNFT(priKey, nftaddress, inputdata, neth, gas, gaslimit, gastype, maxPriorityFeePerGas, maxFeePerGas);
+            }
+            
+    }
+        //break;
+    }
+}
 
 function creatpriatenumber(value) {
     var createnumber = Number(value.createnumber);
@@ -996,6 +1073,7 @@ module.exports = {
     boxcheck:boxcheck,
     GetAbiInfoNoprikey:GetAbiInfoNoprikey,
     numtostring:numtostring,
-    stringtonum:stringtonum
+    stringtonum:stringtonum,
+    abishiyongbyaddress:abishiyongbyaddress
 }
 
