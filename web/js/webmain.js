@@ -257,7 +257,7 @@ function readfunction(value) {
     typename = "payable";
   }
   viewmap.forEach(element => {
-    debugger;
+    //debugger;
     var fname = element.name
     var option = document.createElement("option");
     option.value = typename;
@@ -281,6 +281,7 @@ function transpara(input) {
   type = input.name;
   value = input.value;
   id = input.id;
+  debugger
   if (type == "bool") {
     if (value.toLowerCase() == "ture" || value == "1") {
       return true;
@@ -292,6 +293,11 @@ function transpara(input) {
       console.log("错误：" + id + "输入的参数不匹配");
       return "error";
     }
+  }
+  else if(type.indexOf("[]")!=-1)
+  {
+    value = JSON.parse(value);
+    return value;
   }
   else if (type == "address") {
     if (value.indexOf("0x") == -1) {
