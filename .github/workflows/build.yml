@@ -1,0 +1,35 @@
+name: Build Electron App
+
+on:
+  push:
+    branches:
+      - main # 或者是您的默认分支名称
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16 # 根据您的项目需求更改 Node.js 版本
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Install Electron Packager
+      run: npm install electron-packager -g
+
+    - name: Build Electron app for Linux
+      run: electron-packager . --platform=linux --arch=x64 --out=dist-linux
+
+    - name: Build Electron app for Windows
+      run: electron-packager . --platform=win32 --arch=x64 --out=dist-windows
+
+    - name: Build Electron app for macOS
+      if: startsWith(github.ref, 'refs/tags/') # 可选：仅在创建新标签时构建 macOS 应用程序
+      run: electron-packager . --platform=darwin --arch=x64 --out=dist-macos
