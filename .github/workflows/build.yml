@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main # 或者是您的默认分支名称
+    tags:
+      - 'v*' # 当推送一个带有 "v" 前缀的标签时触发（例如：v1.0.0）
 
 jobs:
   build:
@@ -39,3 +41,44 @@ jobs:
     - name: Build Electron app for macOS
       if: startsWith(github.ref, 'refs/tags/') # 可选：仅在创建新标签时构建 macOS 应用程序
       run: electron-packager . --platform=darwin --arch=x64 --out=dist-macos
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 使用 GitHub 提供的默认 token
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Linux Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist-linux/nftqianggou-linux-x64.tar.gz
+        asset_name: nftqianggou-linux-x64.tar.gz
+        asset_content_type: application/gzip
+
+    - name: Upload Windows Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist-windows/nftqianggou-win32-x64.zip
+        asset_name: nftqianggou-win32-x64.zip
+        asset_content_type: application/zip
+
+    - name: Upload macOS Asset
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist-macos/nftqianggou-darwin-x64.zip
+        asset_name: nftqianggou-darwin-x64.zip
