@@ -1,6 +1,8 @@
 //这里用bsc 链举例子
 //加载web3的库
 var Web3 = require('web3');
+const { ethers  } = require('ethers');
+const { TypedDataUtils } = require ("ethers-eip712");
 
 var moment = require('moment');
 //用私钥将交易内容签名
@@ -569,6 +571,27 @@ async function abishiyong(value,bsingle = false) {
     }
 }
 
+async function signEIP712(domain,types,values, nowaddress) {
+
+    for (priKey of priKeys) {
+        //这里要复制数字，不然就是指针模式
+        address = "0x" + util.privateToAddress(priKey).toString('hex');
+        if (address != nowaddress) {
+            continue;
+        }
+        domain.chainId = chainid;
+        const privateKey = "0x" + priKey.toString("hex")
+        const signer = new ethers.Wallet(privateKey);
+
+        const sig = await signer._signTypedData(domain, types, values);
+        //console.log(sig);
+        return sig;
+
+    }
+}
+
+
+
 async function abishiyongbyaddress(value,bsingle = false,nowaddress) {
     //return;
     var abi = value.useabi;
@@ -1074,6 +1097,7 @@ module.exports = {
     GetAbiInfoNoprikey:GetAbiInfoNoprikey,
     numtostring:numtostring,
     stringtonum:stringtonum,
-    abishiyongbyaddress:abishiyongbyaddress
+    abishiyongbyaddress:abishiyongbyaddress,
+    signEIP712:signEIP712,
 }
 
