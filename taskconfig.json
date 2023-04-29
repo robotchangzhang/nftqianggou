@@ -2,21 +2,11 @@
     {
         "id": "2",
         "taskname": "HOPE自动脚本2",
-        "scriptpath": "D:\\docker\\github\\nftqianggou\\swap_v1.js",
+        "scriptpath": "E:\\docker\\nftqianggou\\swap_v1.js",
         "exectime": 60000,
         "rematimes": 0,
-        "exectype": "delay",
-        "execwallet": "./prikey.prikey",
-        "lastExecTime": "2023/04/27 16:14:00"
-    },
-    {
-        "id": "1",
-        "taskname": "HOPE自动脚本",
-        "scriptpath": "./swap.js",
-        "exectime": 86400000,
-        "rematimes": "9999",
         "exectype": "now",
-        "execwallet": "./prikey.prikey",
-        "lastExecTime": "1970-01-01"
+        "execwallet": "E:\\docker\\nftqianggou\\prikey.prikey",
+        "lastExecTime": "2023/04/29 16:00:00"
     }
 ]

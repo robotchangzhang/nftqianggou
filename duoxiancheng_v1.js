@@ -906,15 +906,15 @@ class EthereumManager {
                 strnumber = strnumber.substring(0, strnumber.length - removenumber);
                 strnumber = strnumber.replace(".", "");
             }
-            if (dotpos == 1) {
-                strnumber = strnumber.substring(1, strnumber.length);
-            }
+           
         }
         else {
             for (var i = 0; i < decimals; i++) {
                 strnumber += "0";
             }
         }
+        //将左侧的0删掉知道遇到不为0的数
+        strnumber = strnumber.replace(/^0+/, '');
         return strnumber;
 
     }
