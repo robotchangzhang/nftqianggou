@@ -216,9 +216,21 @@ ipcRenderer.on('info:taskInit', (e, value) => {
 
 });
 
+function getmaxid()
+{
+    var id = 0;
+    for (const item of configData) {
+        if(id<Number(item.id))
+        {
+            id = Number(item.id)
+        }
+    }
+    return id
+}
+
 function addRow() {
     const newRowData = {
-        id: (configData.length + 1),
+        id: (getmaxid() + 1),
         taskname: "",
         scriptpath: "",
         exectime: 0,

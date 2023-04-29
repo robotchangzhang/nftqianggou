@@ -3,10 +3,40 @@
         "id": "2",
         "taskname": "HOPE自动脚本2",
         "scriptpath": "E:\\docker\\nftqianggou\\swap_v1.js",
-        "exectime": 60000,
-        "rematimes": 0,
-        "exectype": "now",
+        "exectime": 86400000,
+        "rematimes": "50",
+        "exectype": "delay",
         "execwallet": "E:\\docker\\nftqianggou\\prikey.prikey",
         "lastExecTime": "2023/04/29 16:00:00"
+    },
+    {
+        "id": "3",
+        "taskname": "ZK自动跨链脚本",
+        "scriptpath": "./zk_1.js",
+        "exectime": 604800000,
+        "rematimes": "50",
+        "exectype": "delay",
+        "execwallet": "./zkprikey1.prikey",
+        "lastExecTime": "2023/04/26 16:00:00"
+    },
+    {
+        "id": "4",
+        "taskname": "ZK交互脚本2",
+        "scriptpath": "./zk_2.js",
+        "exectime": 604800000,
+        "rematimes": "51",
+        "exectype": "delay",
+        "execwallet": "./zkprikey1.prikey",
+        "lastExecTime": "2023/04/27 12:00:00"
+    },
+    {
+        "id": "5",
+        "taskname": "ZK交互脚本3",
+        "scriptpath": "./zk_3.js",
+        "exectime": 604800000,
+        "rematimes": "51",
+        "exectype": "delay",
+        "execwallet": "./zkprikey1.prikey",
+        "lastExecTime": "2023/04/28 12:00:00"
     }
 ]
