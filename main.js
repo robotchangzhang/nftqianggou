@@ -1,7 +1,7 @@
 // Modules to control application life and create native browser window
 const electron = require('electron')
 const path = require('path')
-const qianggou = require('./duoxiancheng')
+const duoxiancheng = require('./duoxiancheng_v1')
 const queryContract = require("./dealContract")
 const schedule = require('node-schedule');
 const { dialog } = require('electron')
@@ -9,15 +9,20 @@ const punk = require('./btcord')
 const ipcMain = electron.ipcMain
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
-
+const confighelper = require("./confighandle")
 
 
 
 let mainWindow = null
+const qianggou =new duoxiancheng.EthereumManager();
+const configFilePath = "./taskconfig.json"
+const configData = confighelper.readConfigFile(configFilePath);
+
+const tasklist =[]  //用来管理任务队列，新增任务，删除任务的是，要从这里面增加删除。
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1200,
+    width: 1900,
     height: 1000,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -30,7 +35,8 @@ function createWindow() {
 
   // and load the index.html of the app.
   mainWindow.loadFile('./web/index.html')
-  qianggou.setmainWindow(mainWindow);
+  duoxiancheng.setmainWindow(mainWindow);
+  
   punk.setmainWindow(mainWindow);
   //const mainMenu = Menu.buildFromTemplate(menuTemplate);
   //Menu.setApplicationMenu(mainMenu);
@@ -64,7 +70,110 @@ app.on('window-all-closed', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+var bInitTask = false;
 
+async function alltask()
+{
+  if(bInitTask)
+  {
+    return
+  }
+  bInitTask = true;
+    //启动 task
+    for(var i=0;i<configData.length;i++)
+    {
+        var data = configData[i];
+        var renwuj =await taskcreate(data);
+       
+    }
+}
+
+function gettime(exectime) {
+  var result = [true];
+  let schedule = null;
+  var nowexectime = Number(exectime)
+  switch (nowexectime) {
+    case 60000: // 1 minute
+      schedule = '*/1 * * * *';
+      break;
+    case 3600000: // 1 hour
+      schedule = '0 * * * *';
+      break;
+    case 86400000: // 1 day
+      schedule = '0 0 * * *';
+      break;
+    case 604800000: // 1 week
+      schedule = '0 0 * * 0';
+      break;
+    case 2628000000: // 1 month (approx.)
+      schedule = '0 0 1 * *';
+      break;
+    case 31536000000: // 1 year (approx.)
+      schedule = '0 0 1 1 *';
+      break;
+    // 在这里添加更多的case，根据您的需求
+    default:
+      console.log('Invalid exectime value');
+      ;
+  }
+  if (schedule != null) {
+    result.push(schedule)
+  }
+  else {
+    result[0] = false;
+  }
+  return result;
+}
+
+const taskcreate = async (data) => {
+  
+  timeresult = gettime(data.exectime)
+  if(timeresult[0])
+  {
+    const j = schedule.scheduleJob(timeresult[1], async () => {
+        //脚本地址
+        data = confighelper.getElementById(configData,data.id);
+
+        if(data == null ||  Number(data.rematimes)<1)
+        {
+          return;
+        }
+        filename = data.scriptpath
+        try {
+          const dynamicModule = require(filename);
+          if (typeof dynamicModule.start === 'function') {
+            
+            await dynamicModule.start(data);
+          } else {
+            console.error(`Error: The file ${filename} does not have a start function.`);
+          }
+          data.rematimes = Number(data.rematimes)-1;
+          data.lastExecTime = formatDate( new Date());
+          confighelper.updateOrAddTask(configData,data);
+          confighelper.writeConfigFile(configFilePath, configData);
+          //给页面发送通知
+          mainWindow.webContents.send("info:taskInit", { configData});
+          clearModuleCache(filename);
+        } catch (error) {
+          clearModuleCache(filename);
+          console.error(`Error loading and executing file: ${filename}`, error);
+        }
+
+    })
+    tasklist.push({"id":data.id,"renwuj":j})
+    return j;
+  }
+  
+}
+
+async function addTask(taskData) {
+  // Update configData and save it to the file
+ 
+
+  // Create a new task and add it to the tasklist
+  const newTask = await taskcreate(taskData);
+
+}
 
 const eventListener = async () => {
   ipcMain.on('info:initweb3', async (e, value) => {
@@ -113,6 +222,7 @@ const eventListener = async () => {
     console.log("info:accounts");
     console.log(value)
     result = qianggou.accounts();
+   
     console.log(result);
 
     mainWindow.webContents.send("info:accounts", { result });
@@ -167,7 +277,7 @@ const eventListener = async () => {
       try {
         const dynamicModule = require(filename.filePaths[0]);
         if (typeof dynamicModule.start === 'function') {
-          await dynamicModule.start();
+            dynamicModule.start(value);
         } else {
           console.error(`Error: The file ${filename} does not have a start function.`);
         }
@@ -178,6 +288,23 @@ const eventListener = async () => {
       }
      
     }
+
+  })
+
+
+  ipcMain.on('info:selectpath', async (e, value) => {
+    console.log("info:selectpath");
+    filename = await dialog.showOpenDialog({ properties: ['openFile'] });
+    if (filename.canceled == false) {
+       
+       value.filepath = filename.filePaths[0]
+       mainWindow.webContents.send("info:selectpath", value);
+    }
+    else
+    {
+
+    }
+  
 
   })
 
@@ -248,6 +375,8 @@ const eventListener = async () => {
     })
     return j;
   }
+
+
   ipcMain.on('info:getbtccookiepath', async (e, value) => {
     console.log("info:getbtccookiepath");
     filename = await dialog.showOpenDialog({ properties: ['openFile'] });
@@ -256,6 +385,57 @@ const eventListener = async () => {
       mainWindow.webContents.send("info:getbtccookiepath", { "filename":filename.filePaths });
     }
   })
+  ipcMain.on('info:taskInit', async (e, value) => {
+    console.log("info:taskInit");
+    alltask()
+    mainWindow.webContents.send("info:taskInit", { configData});
+    
+  })
+
+  ipcMain.on('info:taskedit', async (e, value) => {
+    console.log("info:taskedit");
+    var result = confighelper.updateOrAddTask(configData, value.editdata);
+
+    confighelper.writeConfigFile(configFilePath, configData);
+    if(result)
+    {
+      //说明新增了任务
+      await taskcreate(value.editdata);
+    }
+    else
+    {
+      //说明修改了任务,需要删除旧任务，然后增加新任务
+      const taskIndex = tasklist.findIndex((task) => task.id === value.editdata.id);
+      if (taskIndex !== -1) {
+        tasklist[taskIndex].renwuj.cancel();
+        tasklist.splice(taskIndex, 1);
+      }
+
+      await taskcreate(value.editdata);
+    }
+    //mainWindow.webContents.send("info:taskInit", { configData});
+    
+  })
+
+  ipcMain.on('info:taskdelete', async (e, value) => {
+    console.log("info:taskdelete");
+    confighelper.deleteTaskById(configData, value.id);
+
+    confighelper.writeConfigFile(configFilePath, configData);
+
+    //任务队列需要取消之前的任务
+    const taskIndex = tasklist.findIndex((task) => task.id === value.id);
+    if (taskIndex !== -1) {
+      tasklist[taskIndex].renwuj.cancel();
+      tasklist.splice(taskIndex, 1);
+    }
+    //mainWindow.webContents.send("info:taskInit", { configData});
+    
+  })
+
+
+  
+
 
 
   ipcMain.on('info:btcsetting', async (e, value) => {
@@ -279,7 +459,7 @@ const eventListener = async () => {
     mainWindow.webContents.send("info:getbtccookiepath", { info });
 
   })
-
+ 
 
 }
 function clearModuleCache(modulePath) {
@@ -292,3 +472,15 @@ function clearModuleCache(modulePath) {
 }
 
 eventListener();
+
+
+function formatDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+}
