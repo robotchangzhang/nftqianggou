@@ -104,6 +104,8 @@ class EthereumManager {
     }
 
 
+    
+
     #getPriKeys(prikeyPath) {
         var arr = new Array();
         var exists = this.isFileExist(prikeyPath);
@@ -191,7 +193,7 @@ class EthereumManager {
     //通过小数点多少位，转换对应的数据
     getweiname(tokendecimals = 18) {
         tokendecimals = Number(tokendecimals.toString())
-        weiname = 'ether';
+        var weiname = 'ether';
 
         switch (tokendecimals) {
             case 3:
@@ -341,7 +343,51 @@ class EthereumManager {
         return Math.floor(Date.now());
     }
 
+    test() {
+        var i = 0;
+        var priKeys = prikeymap.get(this);
+        for (var priKey of priKeys) {
+            this.testbalance(i, priKey);
+            i++;
+        }
+    }
 
+    testbalance = async (i, priKey) => {
+
+        i = i + 1;
+        var fromAddress  = ""
+        try {
+            fromAddress = "0x" + util.privateToAddress(priKey).toString('hex');
+        }
+        catch (e) {
+            return;
+        }
+    
+        //console.log("地址：" + fromAddress)
+        var balance = await this.getETHBalance(fromAddress);
+        //if (Number(balance) > 0) 
+        {
+            var msg = ("时间" + this.getNowMilliSecond() + "|第" + i + "个" + "地址:" + fromAddress + "有" + balance + "个" + this.nownetwork);
+            sendmsg(msg);
+        }
+    
+    
+    
+    }
+
+    getNowMilliSecond() {
+        return Math.floor(Date.now());
+    }
+
+    getETHBalance = async (address) => {
+        let result = await this.web3.eth.getBalance(address)
+        //由于使用的是大数模式，小数点有18位，所以获得的balance 要除以10^18次方才是正确的数据
+        //或者使用自带的转换工具
+        //原始区块链数据中存的BNB的数量是
+    
+        let balance = this.web3.utils.fromWei(result.toString(10), this.getweiname());
+        return balance;
+    }
 
     qianggou(value) {
         var gas = value.gas;
@@ -882,4 +928,5 @@ module.exports = {
 
 
 }
+
 
