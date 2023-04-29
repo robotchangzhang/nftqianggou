@@ -14,6 +14,9 @@ const { Common } = require('@ethereumjs/common');
 const HttpsProxyAgent = require('https-proxy-agent')
 
 require('dotenv').config()
+var fs = require('fs');
+
+
 const { env } = process
 const proxy = env.PROXYURL // HTTP/HTTPS proxy to connect to
 const useproxy = Number(env.PROXYUSE)
@@ -21,7 +24,7 @@ const useproxy = Number(env.PROXYUSE)
 const EthereumTx1559 = require('@ethereumjs/tx');
 var web4 = new Web3()
 
-var fs = require('fs');
+
 var mainWindow = null; //用来给前台发信息
 var web3 = null;
 var chainid = 1;
@@ -436,15 +439,7 @@ function qianggou(value) {
 }
 
 
-function sendmsg(msg) {
-    if (mainWindow != null) {
-        mainWindow.webContents.send("info:msg", { msg });
-    }
-}
 
-function setmainWindow(newmainWindow) {
-    mainWindow = newmainWindow;
-}
 
 async function GetAbiInfoNoprikey(functionname,abi,abiokvalue,nftaddress)
 {
@@ -1078,6 +1073,19 @@ function boxcheck(value)
 {
     fenxiEX(value)
 }
+
+
+
+function sendmsg(msg) {
+    if (mainWindow != null) {
+        mainWindow.webContents.send("info:msg", { msg });
+    }
+}
+
+function setmainWindow(newmainWindow) {
+    mainWindow = newmainWindow;
+}
+
 
 module.exports = {
     initWeb3: initWeb3,

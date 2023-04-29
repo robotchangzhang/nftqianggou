@@ -16,8 +16,8 @@ function reloadaddress() {
 
 function changepage(pagename) {
 
-  var pagenamelist = ['jiaohu','manageprikey','highfunction','melody','btcpunk']
-  var pagenameele = ['#tabjiaohu','#tabmanageprikey','#highfunction','#melodycheck','#btcordnft'] 
+  var pagenamelist = ['jiaohu','manageprikey','highfunction','melody','btcpunk','taskmanagement']
+  var pagenameele = ['#tabjiaohu','#tabmanageprikey','#highfunction','#melodycheck','#btcordnft','#taskmanagement'] 
 
   var pageindex = 0;
   for(var i=0;i<pagenamelist.length;i++)
@@ -105,7 +105,7 @@ function boxcheck()
   ipcRenderer.send('info:boxcheck',{tokenid})
 }
 
-function pilianglingshui() {
-  ipcRenderer.send('info:pilianglingshui', null)
+function pilianglingshui(value) {
+  ipcRenderer.send('info:pilianglingshui', {"exectype":value})
 
 }
